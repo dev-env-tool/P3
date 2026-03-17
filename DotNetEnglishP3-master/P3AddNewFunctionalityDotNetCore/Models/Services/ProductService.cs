@@ -7,6 +7,9 @@ using Microsoft.Extensions.Localization;
 using P3AddNewFunctionalityDotNetCore.Models.Entities;
 using P3AddNewFunctionalityDotNetCore.Models.Repositories;
 using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
+//Adding the Data Anotations library
+using System.ComponentModel.DataAnnotations;
+using P3AddNewFunctionalityDotNetCore.Resources.Models.Services;
 
 namespace P3AddNewFunctionalityDotNetCore.Models.Services
 {
@@ -94,6 +97,14 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
         public List<string> CheckProductModelErrors(ProductViewModel product)
         {
             List<string> modelErrors = new List<string>();
+
+            //var Attribut = new PricePositiveAndNotEqualTo0();
+
+            //if (!Attribut.IsValid(product.Price))
+            //{
+            //    modelErrors.Add(_localizer["PriceNotGreaterThanZero"]);
+            //}
+
             if (product.Name == null || string.IsNullOrWhiteSpace(product.Name))
             {
                 modelErrors.Add(_localizer["MissingName"]);
