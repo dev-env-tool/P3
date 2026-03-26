@@ -54,11 +54,10 @@ namespace P3AddNewFunctionalityDotNetCore.Resources.Models.Services
             {
                 return false;
             }
-            if (!(priceValue >0))
+            if (!(priceValue > 0))
             {
                 return false; 
             }
-
             return true;
         }
     }
@@ -74,11 +73,6 @@ namespace P3AddNewFunctionalityDotNetCore.Resources.Models.Services
             {
                 return false;
             }
-            if (!(priceValue > 0))
-            {
-                return false;
-            }
-
             return true;
         }
         

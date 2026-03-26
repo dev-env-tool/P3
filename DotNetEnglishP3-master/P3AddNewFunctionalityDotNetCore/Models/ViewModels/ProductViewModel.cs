@@ -20,7 +20,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
         [P3AddNewFunctionalityDotNetCore.Resources.Models.Services.PriceNotDouble]
         public string Stock { get; set; }
 
-        //[Required]
+        [Required]
         [P3AddNewFunctionalityDotNetCore.Resources.Models.Services.PriceGreaterThan0]
         [P3AddNewFunctionalityDotNetCore.Resources.Models.Services.PriceNotDouble]
         public string Price { get; set; }
