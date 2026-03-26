@@ -1,15 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Localization;
+using Microsoft.IdentityModel.Tokens;
 using P3AddNewFunctionalityDotNetCore.Models.Entities;
 using P3AddNewFunctionalityDotNetCore.Models.Repositories;
 using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
+using P3AddNewFunctionalityDotNetCore.Resources.Models.Services;
+using System;
+using System.Collections.Generic;
 //Adding the Data Anotations library
 using System.ComponentModel.DataAnnotations;
-using P3AddNewFunctionalityDotNetCore.Resources.Models.Services;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace P3AddNewFunctionalityDotNetCore.Models.Services
 {
@@ -94,55 +97,136 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
         }
 
         // TODO this is an example method, remove it and perform model validation using data annotations
+        //public List<string> CheckProductModelErrors(ProductViewModel product)
+        //{
+        //    List<string> modelErrors = new List<string>();
+
+        //    //var Attribut = new PricePositiveAndNotEqualTo0();
+
+        //    //if (!Attribut.IsValid(product.Price))
+        //    //{
+        //    //    modelErrors.Add(_localizer["PriceNotGreaterThanZero"]);
+        //    //}
+
+        //    if (product.Name == null || string.IsNullOrWhiteSpace(product.Name))
+        //    {
+        //        modelErrors.Add(_localizer["MissingName"]);
+        //    }
+
+        //    if (product.Price == null || string.IsNullOrWhiteSpace(product.Price))
+        //    {
+        //        modelErrors.Add(_localizer["MissingPrice"]);
+        //    }
+
+        //    if (!Double.TryParse(product.Price, out double pc))
+        //    {
+        //        modelErrors.Add(_localizer["PriceNotANumber"]);
+        //    }
+        //    else
+        //    {
+        //        if (pc <= 0)
+        //            modelErrors.Add(_localizer["PriceNotGreaterThanZero"]);
+        //    }
+
+        //    if (product.Stock == null || string.IsNullOrWhiteSpace(product.Stock))
+        //    {
+        //        modelErrors.Add(_localizer["MissingQuantity"]);
+        //    }
+
+        //    if (!int.TryParse(product.Stock, out int qt))
+        //    {
+        //        modelErrors.Add(_localizer["StockNotAnInteger"]);
+        //    }
+        //    else
+        //    {
+        //        if (qt <= 0)
+        //            modelErrors.Add(_localizer["StockNotGreaterThanZero"]);
+        //    }
+
+        //    return modelErrors;
+        //}
+
+
+        //List<string> modelErrors = new List<string>();
+
+        //public Validation PriceValidation(ProductViewModel product)
+        //{
+        //    if (product.Price == null)
+        //    {
+        //        return (new Validation { IsValid = false, ErrorMessage = modelErrors.Add(_localizer["MissingPrice"]) });
+        //    }
+
+
+
+
+        //}
+        
         public List<string> CheckProductModelErrors(ProductViewModel product)
         {
             List<string> modelErrors = new List<string>();
 
-            //var Attribut = new PricePositiveAndNotEqualTo0();
+            //modelErrors.Add(_localizer["MissingName"]);
+            //modelErrors.Add(_localizer["MissingPrice"]);
+            //modelErrors.Add(_localizer["PriceNotANumber"]);
 
-            //if (!Attribut.IsValid(product.Price))
-            //{
-            //    modelErrors.Add(_localizer["PriceNotGreaterThanZero"]);
-            //}
+            //modelErrors.Add(_localizer["PriceNotGreaterThanZero"]);
+            //modelErrors.Add(_localizer["MissingQuantity"]);
+            //modelErrors.Add(_localizer["StockNotAnInteger"]);
+            //modelErrors.Add(_localizer["StockNotGreaterThanZero"]);
 
-            if (product.Name == null || string.IsNullOrWhiteSpace(product.Name))
+
+            var Attribut = new PriceGreaterThan0();
+
+            if (!Attribut.IsValid(product.Price))
             {
-                modelErrors.Add(_localizer["MissingName"]);
+                 modelErrors.Add(_localizer["PriceNotGreaterThanZero"]);
             }
 
-            if (product.Price == null || string.IsNullOrWhiteSpace(product.Price))
-            {
-                modelErrors.Add(_localizer["MissingPrice"]);
-            }
+            var Attribut2 = new PriceNotDouble();
 
-            if (!Double.TryParse(product.Price, out double pc))
+            if (!Attribut2.IsValid(product.Price))
             {
                 modelErrors.Add(_localizer["PriceNotANumber"]);
             }
-            else
-            {
-                if (pc <= 0)
-                    modelErrors.Add(_localizer["PriceNotGreaterThanZero"]);
-            }
 
-            if (product.Stock == null || string.IsNullOrWhiteSpace(product.Stock))
-            {
-                modelErrors.Add(_localizer["MissingQuantity"]);
-            }
 
-            if (!int.TryParse(product.Stock, out int qt))
-            {
-                modelErrors.Add(_localizer["StockNotAnInteger"]);
-            }
-            else
-            {
-                if (qt <= 0)
-                    modelErrors.Add(_localizer["StockNotGreaterThanZero"]);
-            }
+            //if (product.Name == null || string.IsNullOrWhiteSpace(product.Name))
+            //{
+            //    modelErrors.Add(_localizer["MissingName"]);
+            //}
+
+            //if (product.Price == null || string.IsNullOrWhiteSpace(product.Price))
+            //{
+            //    modelErrors.Add(_localizer["MissingPrice"]);
+            //}
+
+            //if (!Double.TryParse(product.Price, out double pc))
+            //{
+            //    modelErrors.Add(_localizer["PriceNotANumber"]);
+            //}
+            //else
+            //{
+            //    if (pc <= 0)
+            //        modelErrors.Add(_localizer["PriceNotGreaterThanZero"]);
+            //}
+
+            //if (product.Stock == null || string.IsNullOrWhiteSpace(product.Stock))
+            //{
+            //    modelErrors.Add(_localizer["MissingQuantity"]);
+            //}
+
+            //if (!int.TryParse(product.Stock, out int qt))
+            //{
+            //    modelErrors.Add(_localizer["StockNotAnInteger"]);
+            //}
+            //else
+            //{
+            //    if (qt <= 0)
+            //        modelErrors.Add(_localizer["StockNotGreaterThanZero"]);
+            //}
 
             return modelErrors;
         }
-
         public void SaveProduct(ProductViewModel product)
         {
             var productToAdd = MapToProductEntity(product);
@@ -170,6 +254,13 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
             _cart.RemoveLine(GetProductById(id));
 
             _productRepository.DeleteProduct(id);
+        }
+
+        public class Validation
+        {
+            public bool IsValid { get; set; }
+            public string ErrorMessage { get; set; }
+
         }
     }
 }

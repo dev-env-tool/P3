@@ -46,7 +46,7 @@ namespace P3AddNewFunctionalityDotNetCore.Controllers
                     }
                 }
             }
-            ModelState.AddModelError("", "Invalid name or password");
+            ModelState.AddModelError("", P3AddNewFunctionalityDotNetCore.Resources.Models.Login.ErrorWrongLoginNameOrPassword);
             return View(loginModel);
         }
 

@@ -117,25 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="MissingName" xml:space="preserve">
-    <value>Veuillez saisir un nom</value>
+  <data name="ErrorMissingLoginName" xml:space="preserve">
+    <value>Please give a name</value>
   </data>
-  <data name="MissingPrice" xml:space="preserve">
-    <value>Veuillez saisir un prix</value>
+  <data name="ErrorMissingLoginPassword" xml:space="preserve">
+    <value>Please give a password</value>
   </data>
-  <data name="MissingStock" xml:space="preserve">
-    <value>Veuillez saisir un stock</value>
-  </data>
-  <data name="PriceNotANumber" xml:space="preserve">
-    <value>La valeur saisie pour le prix doit être un nombre</value>
-  </data>
-  <data name="PriceNotGreaterThanZero" xml:space="preserve">
-    <value>Le prix doit être supérieur à zéro</value>
-  </data>
-  <data name="StockNotAnInteger" xml:space="preserve">
-    <value>La valeur saisie pour le stock doit être un entier</value>
-  </data>
-  <data name="StockNotGreaterThanZero" xml:space="preserve">
-    <value>Le stock doit être supérieure à zéro</value>
+  <data name="ErrorWrongLoginNameOrPassword" xml:space="preserve">
+    <value>The name or the password is wrong</value>
   </data>
 </root>
