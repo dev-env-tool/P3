@@ -7,7 +7,7 @@
 
 
 <form asp-action="Login" asp-controller="Account" method="post">
-    <div class="text-danger mt-4" asp-validation-summary="All"></div>
+    @* <div class="text-danger mt-4" asp-validation-summary="All"></div> *@
     <input type="hidden" asp-for="ReturnUrl" />
     <div class="mb-3">
         <label asp-for="Name"></label>
