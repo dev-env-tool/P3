@@ -136,6 +136,6 @@
     <value>La valeur saisie pour le stock doit être un entier</value>
   </data>
   <data name="StockNotGreaterThanZero" xml:space="preserve">
-    <value>Le stock doit être supérieure à zéro</value>
+    <value>Le stock doit être supérieur à zéro</value>
   </data>
 </root>

@@ -16,22 +16,22 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
 
         public string Details { get; set; }
 
+        //<summary>
         [Required(ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "MissingStock")]
-        [RegularExpression("^((?!^Stock$)[0-9])+$", ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "StockNotAnInteger")]
-        [Range(1, double.MaxValue, ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "StockNotGreaterThanZero")]
-        [P3AddNewFunctionalityDotNetCore.Resources.Models.Services.PriceNotDouble]
+        [RegularExpression("^((?!^Stock$)-?[0-9])+$", ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "StockNotAnInteger")]
+        [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "StockNotGreaterThanZero")]
+        //</summary>
+        
         public string Stock { get; set; }
 
+
         [Required(ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "MissingPrice")]
-        [Range(0.01, 10000000000, ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "PriceNotGreaterThanZero")]
-        [P3AddNewFunctionalityDotNetCore.Resources.Models.Services.PriceGreaterThan0]
-        [P3AddNewFunctionalityDotNetCore.Resources.Models.Services.PriceNotDouble]
+        [Range(0.01, double.MaxValue, ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "PriceNotGreaterThanZero")]
+        [RegularExpression("^((?!^Price$)-?^(\\d+\\.?\\d+|\\d))+$", ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "PriceNotANumber")]
+
         public string Price { get; set; }
     }
 
 
-    public class GetErrorMessage
-    {
-        public string errorMessage = P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService.MissingPrice;
-    }
+
 }
