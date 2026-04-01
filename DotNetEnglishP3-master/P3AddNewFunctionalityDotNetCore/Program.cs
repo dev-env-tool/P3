@@ -33,6 +33,9 @@ builder.Services.AddMvc()
 builder.Services.AddDbContext<P3Referential>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("P3Referential")));
 
+builder.Services.AddDbContext<P3Referential>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("P3ReferentialForTests")));
+
 builder.Services.AddDbContext<AppIdentityDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("P3Identity")));
 

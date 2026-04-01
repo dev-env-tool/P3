@@ -9,7 +9,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
         [BindNever]
         public int Id { get; set; }
 
-        [Required(ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "MissingName")]
+        [Required(ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources), ErrorMessageResourceName = "MissingName")]
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -18,7 +18,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
 
         //<summary>
         //Use of Required to spot on an empty field
-        [Required(ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "MissingStock")]
+        [Required(ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources), ErrorMessageResourceName = "MissingStock")]
         //</summary>
 
         //<summary>
@@ -29,12 +29,12 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
         //-? the string may begin with one "-" character. Only one "-" character is allowed.
         //[0-9]) a number only composed of digits from 0 to 9 (inclued)
         //+$" end of the string
-        [RegularExpression("^((?!^Stock$)-?[0-9])+$", ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "StockNotAnInteger")]
+        [RegularExpression("^((?!^Stock$)-?[0-9])+$", ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources), ErrorMessageResourceName = "StockNotAnInteger")]
         //</summary>
 
         //<summary>
         //Use of a "Range" attribute to check wether the field is an integer between 1 and Signed 2 bytes int = 2,147,483,647.
-        [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "StockNotGreaterThanZero")]
+        [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources), ErrorMessageResourceName = "StockNotGreaterThanZero")]
         //</summary>
         
         public string Stock { get; set; }
@@ -44,7 +44,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
 
         //<summary>
         //Use of Required to spot on an empty field
-        [Required(ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "MissingPrice")]
+        [Required(ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources), ErrorMessageResourceName = "MissingPrice")]
         //</summary>
 
         //<summary>
@@ -58,12 +58,12 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
         //followed by a number of one or more digits.
         //+$" end of the string
         //
-        [RegularExpression("^((?!^Price$)-?(\\d+\\.?\\d+|\\d))+$", ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "PriceNotANumber")]
+        [RegularExpression("^((?!^Price$)-?(\\d+\\.?\\d+|\\d))+$", ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources), ErrorMessageResourceName = "PriceNotANumber")]
         //</summary>
 
         //<summary>
         //Use of a "Range" attribute to check wether the field is a double between 1 and signed 4 bytes double = 1.7976931348623157*E+308.
-        [Range(0.01, double.MaxValue, ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductService), ErrorMessageResourceName = "PriceNotGreaterThanZero")]
+        [Range(0.01, double.MaxValue, ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources), ErrorMessageResourceName = "PriceNotGreaterThanZero")]
         //</summary>
         public string Price { get; set; }
     }

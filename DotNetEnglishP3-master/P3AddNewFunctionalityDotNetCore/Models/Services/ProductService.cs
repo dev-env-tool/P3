@@ -21,10 +21,10 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
         private readonly ICart _cart;
         private readonly IProductRepository _productRepository;
         private readonly IOrderRepository _orderRepository;
-        private readonly IStringLocalizer<ProductService> _localizer;
+        private readonly IStringLocalizer<ProductServiceResources> _localizer;
 
         public ProductService(ICart cart, IProductRepository productRepository,
-            IOrderRepository orderRepository, IStringLocalizer<ProductService> localizer)
+            IOrderRepository orderRepository, IStringLocalizer<ProductServiceResources> localizer)
         {
             _cart = cart;
             _productRepository = productRepository;
