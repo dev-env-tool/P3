@@ -20,6 +20,7 @@ using System.Data.Common;
 using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Xunit;
 
@@ -36,61 +37,77 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
         public DatabaseFixture()
         {
-             
-
+            /// <summary>
+            /// Build a new configuration path and name of the sql connection string folder.
+            /// </summary >
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
+            /// <summary>
+            /// Choose the database.
+            /// </summary >
             var connectionString = configuration.GetConnectionString("P3ReferentialForTests");
 
-
+            /// <summary>
+            /// Allows for multiple sql connection attempts.
+            /// </summary >
             var options = new DbContextOptionsBuilder<P3Referential>()
             .UseSqlServer(connectionString, providerOptions => providerOptions.EnableRetryOnFailure())
             .Options;
 
 
             /// <summary>
-            /// Preparing options to match DbContextOptions type
-            DbContextOptions <P3Referential> optionsForInjection = options;
+            /// Preparing options to match DbContextOptions type.
             /// </summary >
-            /// 
-            /// 
+            DbContextOptions<P3Referential> optionsForInjection = options;
+
             /// <summary>
-            /// Instanciate the new context using data injection
-            Context = new P3Referential(optionsForInjection, configuration);
+            /// Instanciate the new context using data injection.
             /// </summary >
+            Context = new P3Referential(optionsForInjection, configuration);
+            
 
         }
 
         public void Dispose()
         {
+            /// <summary>
+            /// Opens the database for use.
+            /// </summary >
             Context.Dispose();
         }
+
 
         public class DatabaseTests : IClassFixture<DatabaseFixture>
         {
             private readonly P3Referential _context;
 
-
+            /// <summary>
+            /// OPens the database for use.
+            /// </summary >
             public DatabaseTests(DatabaseFixture fixture)
             {
                 _context = fixture.Context;
             }
-
-
         }
-
 
         [Fact]
         public void Test1()
         {
             // Arrange
+            /// <summary>
+            /// Creating new services linked with Sql Context.
+            /// </summary >
             ICart cart = new Cart();
             IProductRepository productRepository = new ProductRepository(Context);
             IOrderRepository orderRepository = new OrderRepository(Context);
 
+
+            /// <summary>
+            /// Creating new services to simulate localizer.
+            /// </summary >
             var service = new ServiceCollection();
             service.AddLogging();
             service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
@@ -98,47 +115,109 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
             var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
 
+
+            /// <summary>
+            /// Creating a complete ÎproductService.
+            /// </summary >
             IProductService productService = new P3AddNewFunctionalityDotNetCore.Models.Services.ProductService(cart, productRepository, orderRepository, localizer);
 
+
+
+
+            // Arrange
+            /// <summary>
+            /// Simulate user product creation by filling fields.
+            /// </summary >
             ProductViewModel productViewModel = new ProductViewModel
             {
-                Id = 10,
-                Name = "product.Name1",
-                Price = "20",
-                Stock = "10",
-                Description = "product1",
-                Details = "test"
+                Name = "",
+                Price = "1",
+                Stock = "1",
+                Description = "DescriptionTest1’",
+                Details = "DetailsTest1"
             };
 
+            /// <summary>
+            /// Access the private static ProductService.MapToProductEntity() function.
+            /// </summary >
             var accessProductMapper = typeof(ProductService).GetField("MapToProductEntity", BindingFlags.NonPublic | BindingFlags.Static);
 
-            //var Product = new Product();
 
-            //var Mapper = new ProductViewModel();
-                
-            //var productToSaveInDatabase = accessProductMapper.GetValue(productViewModel);
-
-            //ProductViewModel ProductTest = new ProductViewModel
-            //{
-            //    Id = productEntity.Id,
-            //    Name = productEntity.Name,
-            //    Price = productEntity.Price.ToString(CultureInfo.InvariantCulture),
-            //    Stock = productEntity.Quantity.ToString(),
-            //    Description = productEntity.Description,
-            //    Details = productEntity.Details
-            //};
-
-
-
-            // Act
+            // Act Product creation 
             productService.SaveProduct(productViewModel);
+            int productIdFound = productService.GetAllProducts().Select(p => p.Id).Max();
 
+            // Assert
+            Assert.True(productViewModel.Name == "product.Name1");
+
+
+        }
+
+
+
+
+        [Fact]
+        public void Test15()
+        {
+            // Arrange
+            /// <summary>
+            /// Creating new services linked with Sql Context.
+            /// </summary >
+            ICart cart = new Cart();
+            IProductRepository productRepository = new ProductRepository(Context);
+            IOrderRepository orderRepository = new OrderRepository(Context);
+
+
+            /// <summary>
+            /// Creating new services to simulate localizer.
+            /// </summary >
+            var service = new ServiceCollection();
+            service.AddLogging();
+            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+            var serviceProvider = service.BuildServiceProvider();
+
+            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+
+            /// <summary>
+            /// Creating a complete ÎproductService.
+            /// </summary >
+            IProductService productService = new P3AddNewFunctionalityDotNetCore.Models.Services.ProductService(cart, productRepository, orderRepository, localizer);
+
+            // Arrange
+            /// <summary>
+            /// Simulate user product creation by filling fields.
+            /// </summary >
+            ProductViewModel productViewModel = new ProductViewModel
+            {
+                Name = "ProductTest15",
+                Price = "15",
+                Stock = "15",
+                Description = "DescriptionTest15’",
+                Details = "DetailsTest15"
+            };
+
+            /// <summary>
+            /// Access the private static ProductService.MapToProductEntity() function.
+            /// </summary >
+            var accessProductMapper = typeof(ProductService).GetField("MapToProductEntity", BindingFlags.NonPublic | BindingFlags.Static);
+
+
+
+            // Act Product creation 
+            productService.SaveProduct(productViewModel);
+            int productIdFound = productService.GetAllProducts().Select(p => p.Id).Max();
+            var productFound = productService.GetProductById(productIdFound);
             //Assert
-            Assert.True(productViewModel.Id == 10);
-            //Assert.True(1 > 2);
+            Assert.True(productService.GetAllProducts().Select(p => p.Id).Max() == productIdFound);
+            Assert.True(productFound.Name == productViewModel.Name);
+
+            // Act Product deletion
+            productService.DeleteProduct(productIdFound);
+            //Assert
+            Assert.False(productService.GetAllProducts().Select(p => p.Id).Max() == productIdFound);
         }
     }
-
  }
 
 
