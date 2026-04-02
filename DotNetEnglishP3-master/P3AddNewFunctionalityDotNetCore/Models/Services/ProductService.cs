@@ -100,17 +100,25 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
         {
             List<string> modelErrors = new List<string>();
 
+            
 
-            var Attribut = new PriceGreaterThan0();
+            var Attribute1 = new PriceGreaterThan0();
 
-            if (!Attribut.IsValid(product.Price))
+            if (!Attribute1.IsValid(product.Price))
             {
                  modelErrors.Add(_localizer["PriceNotGreaterThanZero"]);
             }
 
-            var Attribut2 = new PriceNotDouble();
+            var Attribute2 = new RequiredAttribute();
 
-            if (!Attribut2.IsValid(product.Price))
+            if (!Attribute2.IsValid(product.Name))
+            {
+                modelErrors.Add(_localizer["MissingName"]);
+            }
+
+            var Attribute3 = new PriceNotDouble();
+
+            if (!Attribute2.IsValid(product.Price))
             {
                 modelErrors.Add(_localizer["PriceNotANumber"]);
             }

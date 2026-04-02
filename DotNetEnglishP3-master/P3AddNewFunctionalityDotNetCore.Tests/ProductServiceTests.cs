@@ -1,4 +1,5 @@
 ﻿using Castle.Core.Resource;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Moq;
+using P3AddNewFunctionalityDotNetCore.Controllers;
 using P3AddNewFunctionalityDotNetCore.Data;
 using P3AddNewFunctionalityDotNetCore.Models;
 using P3AddNewFunctionalityDotNetCore.Models.Entities;
@@ -103,7 +105,8 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             ICart cart = new Cart();
             IProductRepository productRepository = new ProductRepository(Context);
             IOrderRepository orderRepository = new OrderRepository(Context);
-
+            ILanguageService languageService = new LanguageService();
+            
 
             /// <summary>
             /// Creating new services to simulate localizer.
@@ -138,17 +141,25 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             };
 
             /// <summary>
+            /// Access to the ProductController.
+            /// </summary >
+            ProductController productController = new ProductController(productService,languageService);
+
+            /// <summary>
             /// Access the private static ProductService.MapToProductEntity() function.
             /// </summary >
             var accessProductMapper = typeof(ProductService).GetField("MapToProductEntity", BindingFlags.NonPublic | BindingFlags.Static);
 
 
-            // Act Product creation 
-            productService.SaveProduct(productViewModel);
+            // Act Product creation
+
+            //productService.SaveProduct(productViewModel);
+            productController.Create(productViewModel);
             int productIdFound = productService.GetAllProducts().Select(p => p.Id).Max();
 
             // Assert
-            Assert.True(productViewModel.Name == "product.Name1");
+            Assert.True(productService.CheckProductModelErrors(productViewModel).Count == 1);
+            Assert.False(productViewModel.Name == "product.Name1");
 
 
         }

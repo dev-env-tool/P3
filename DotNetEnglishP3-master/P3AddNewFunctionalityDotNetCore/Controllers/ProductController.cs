@@ -42,11 +42,13 @@ namespace P3AddNewFunctionalityDotNetCore.Controllers
         {
             List<string> modelErrors = _productService.CheckProductModelErrors(product);           
 
-            foreach (string error in modelErrors)
-            {
-                ModelState.AddModelError("", error);
+            if (!ModelState.IsValid)
+            { 
+                foreach (string error in modelErrors)
+                {
+                    ModelState.AddModelError("", error);
+                }
             }
-
             if (ModelState.IsValid)
             {
                 _productService.SaveProduct(product);
