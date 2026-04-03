@@ -158,14 +158,81 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             int productIdFound = productService.GetAllProducts().Select(p => p.Id).Max();
 
             // Assert
-            Assert.True(productService.CheckProductModelErrors(productViewModel).Count == 1);
-            Assert.False(productViewModel.Name == "product.Name1");
-
-
+            Assert.True(productController.ModelState.Count == 2);
+            Assert.Contains("MissingName", productController.ModelState);
         }
 
+        [Fact]
+        public void Test2()
+        {
+            // Arrange
+            /// <summary>
+            /// Creating new services linked with Sql Context.
+            /// </summary >
+            ICart cart = new Cart();
+            IProductRepository productRepository = new ProductRepository(Context);
+            IOrderRepository orderRepository = new OrderRepository(Context);
+            ILanguageService languageService = new LanguageService();
 
 
+            /// <summary>
+            /// Creating new services to simulate localizer.
+            /// </summary >
+            var service = new ServiceCollection();
+            service.AddLogging();
+            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+            var serviceProvider = service.BuildServiceProvider();
+
+            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+
+            /// <summary>
+            /// Creating a complete ÎproductService.
+            /// </summary >
+            IProductService productService = new P3AddNewFunctionalityDotNetCore.Models.Services.ProductService(cart, productRepository, orderRepository, localizer);
+
+
+
+
+            // Arrange
+            /// <summary>
+            /// Simulate user product creation by filling fields.
+            /// </summary >
+            ProductViewModel productViewModel = new ProductViewModel
+            {
+                Name = "",
+                Price = "",
+                Stock = "",
+                Description = "DescriptionTest1’",
+                Details = "DetailsTest1"
+            };
+
+            /// <summary>
+            /// Access to the ProductController.
+            /// </summary >
+            ProductController productController = new ProductController(productService, languageService);
+
+            /// <summary>
+            /// Access the private static ProductService.MapToProductEntity() function.
+            /// </summary >
+            var accessProductMapper = typeof(ProductService).GetField("MapToProductEntity", BindingFlags.NonPublic | BindingFlags.Static);
+
+
+            // Act Product creation
+
+            //productService.SaveProduct(productViewModel);
+            productController.Create(productViewModel);
+            int productIdFound = productService.GetAllProducts().Select(p => p.Id).Max();
+
+            // Assert
+            Assert.True(productController.ModelState.Count == 5);
+            Assert.Contains("MissingName", productController.ModelState);
+            Assert.Contains("MissingStock", productController.ModelState);
+            Assert.Contains("MissingPrice", productController.ModelState);
+            Assert.Contains("StockNotGreaterThanZero", productController.ModelState);
+            Assert.Contains("PriceNotGreaterThanZero", productController.ModelState);
+
+        }
 
         [Fact]
         public void Test15()

@@ -40,14 +40,16 @@ namespace P3AddNewFunctionalityDotNetCore.Controllers
         [HttpPost]
         public IActionResult Create(ProductViewModel product)
         {
-            List<string> modelErrors = _productService.CheckProductModelErrors(product);           
+            Dictionary<string, string> modelErrors = _productService.CheckProductModelErrors(product);
+            /// <summary>
+            /// Use of a dictionnary to ease ModelState tests.
+            /// </summary >
+            foreach (var key in modelErrors)
+            {
+                string field = key.Key;
+                string error = key.Value;
 
-            if (!ModelState.IsValid)
-            { 
-                foreach (string error in modelErrors)
-                {
-                    ModelState.AddModelError("", error);
-                }
+                    ModelState.AddModelError(field, error);
             }
             if (ModelState.IsValid)
             {

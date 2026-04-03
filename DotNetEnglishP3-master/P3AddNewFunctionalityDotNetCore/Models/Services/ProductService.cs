@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
+using NUnit.Framework.Constraints;
 using P3AddNewFunctionalityDotNetCore.Models.Entities;
 using P3AddNewFunctionalityDotNetCore.Models.Repositories;
 using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
@@ -12,6 +13,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace P3AddNewFunctionalityDotNetCore.Models.Services
@@ -96,31 +98,72 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
             }
         }
 
-        public List<string> CheckProductModelErrors(ProductViewModel product)
+        public Dictionary<string, string> CheckProductModelErrors(ProductViewModel product)
         {
-            List<string> modelErrors = new List<string>();
+            /// <summary>
+            /// Use of a dictionnary to ease ModelState tests.
+            /// [Key ,Value]
+            /// [Key = Value = "ErrorMessageName" ]
+            /// </summary >
+            Dictionary<string, string> modelErrors = new Dictionary<string, string>();
 
-            
 
-            var Attribute1 = new PriceGreaterThan0();
+            /// <summary>
+            /// Declaration of the same ProductViewModel RegularExpression attributes
+            /// to run server side attribute validation.
+            /// </summary >
+            var Attribute1 = new RequiredAttribute();
 
-            if (!Attribute1.IsValid(product.Price))
+            if (!Attribute1.IsValid(product.Name))
             {
-                 modelErrors.Add(_localizer["PriceNotGreaterThanZero"]);
+                modelErrors.Add("MissingName", _localizer["MissingName"]);
             }
+
 
             var Attribute2 = new RequiredAttribute();
 
-            if (!Attribute2.IsValid(product.Name))
+            if (!Attribute2.IsValid(product.Stock))
             {
-                modelErrors.Add(_localizer["MissingName"]);
+                modelErrors.Add("MissingStock", _localizer["MissingStock"]);
             }
 
-            var Attribute3 = new PriceNotDouble();
 
-            if (!Attribute2.IsValid(product.Price))
+            var Attribute3 = new RegularExpressionAttribute("^((?!^Stock$)-?[0-9])+$");
+
+            if (!Attribute3.IsValid(product.Stock))
             {
-                modelErrors.Add(_localizer["PriceNotANumber"]);
+                 modelErrors.Add("StockNotAnInteger", _localizer["StockNotAnInteger"]);
+            }
+
+            var Attribute4 = new GreaterThanConstraint(product.Stock);
+
+            if (!Attribute4.Equals(0))
+            {
+                modelErrors.Add("StockNotGreaterThanZero", _localizer["StockNotGreaterThanZero"]);
+            }
+
+
+            var Attribute5 = new RequiredAttribute();
+
+            if (!Attribute5.IsValid(product.Price))
+            {
+                modelErrors.Add("MissingPrice", _localizer["MissingPrice"]);
+            }
+
+
+            var Attribute6 = new RegularExpressionAttribute("^((?!^Price$)-?(\\d+\\.?\\d+|\\d))+$");
+
+            if (!Attribute6.IsValid(product.Price))
+            {
+                modelErrors.Add("PriceNotANumber", _localizer["PriceNotANumber"]);
+            }
+
+
+            var Attribute7 = new PriceNotDouble();
+
+            if (!Attribute7.IsValid(product.Price))
+            {
+                modelErrors.Add("PriceNotGreaterThanZero", _localizer["PriceNotGreaterThanZero"]);
             }
 
             return modelErrors;
