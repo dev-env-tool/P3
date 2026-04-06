@@ -137,7 +137,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
 
             var Attribute4 = new GreaterThanConstraint(product.Stock);
 
-            if (!Attribute4.Equals(0))
+            if (Attribute4.Equals(0) || Attribute4.Equals(null))
             {
                 modelErrors.Add("StockNotGreaterThanZero", _localizer["StockNotGreaterThanZero"]);
             }

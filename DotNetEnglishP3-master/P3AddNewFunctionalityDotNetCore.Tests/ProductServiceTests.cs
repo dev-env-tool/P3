@@ -25,7 +25,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Xunit;
-
+//using System.Security.Cryptography.X509Certificates;
 
 
 namespace P3AddNewFunctionalityDotNetCore.Tests
@@ -87,7 +87,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             private readonly P3Referential _context;
 
             /// <summary>
-            /// OPens the database for use.
+            /// Polymorphism : P3ReferentialForTests _context is derivated in each test (below) using the public _context.
             /// </summary >
             public DatabaseTests(DatabaseFixture fixture)
             {
@@ -158,7 +158,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             int productIdFound = productService.GetAllProducts().Select(p => p.Id).Max();
 
             // Assert
-            Assert.True(productController.ModelState.Count == 2);
+            Assert.True(productController.ModelState.Count == 1);
             Assert.Contains("MissingName", productController.ModelState);
         }
 
@@ -237,6 +237,137 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
         [Fact]
         public void Test15()
         {
+            //// Arrange
+            ///// <summary>
+            ///// Creating new services linked with Sql Context.
+            ///// </summary >
+            //ICart cart = new Cart();
+            //IProductRepository productRepository = new ProductRepository(Context);
+            //IOrderRepository orderRepository = new OrderRepository(Context);
+
+
+            ///// <summary>
+            ///// Creating new services to simulate localizer.
+            ///// </summary >
+            //var service = new ServiceCollection();
+            //service.AddLogging();
+            //service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+            //var serviceProvider = service.BuildServiceProvider();
+
+            //var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+
+            ///// <summary>
+            ///// Creating a complete ÎproductService.
+            ///// </summary >
+            //IProductService productService = new P3AddNewFunctionalityDotNetCore.Models.Services.ProductService(cart, productRepository, orderRepository, localizer);
+
+            //// Arrange
+            ///// <summary>
+            ///// Simulate user product creation by filling fields.
+            ///// </summary >
+            //ProductViewModel productViewModel = new ProductViewModel
+            //{
+            //    Name = "ProductTest15",
+            //    Price = "15",
+            //    Stock = "15",
+            //    Description = "DescriptionTest15’",
+            //    Details = "DetailsTest15"
+            //};
+
+            ///// <summary>
+            ///// Access the private static ProductService.MapToProductEntity() function.
+            ///// </summary >
+            //var accessProductMapper = typeof(ProductService).GetField("MapToProductEntity", BindingFlags.NonPublic | BindingFlags.Static);
+
+
+
+            //// Act Product creation 
+            //productService.SaveProduct(productViewModel);
+            //int productIdFound = productService.GetAllProducts().Select(p => p.Id).Max();
+            //var productFound = productService.GetProductById(productIdFound);
+            ////Assert
+            //Assert.True(productService.GetAllProducts().Select(p => p.Id).Max() == productIdFound);
+            //Assert.True(productFound.Name == productViewModel.Name);
+
+            //// Act Product deletion
+            //productService.DeleteProduct(productIdFound);
+            ////Assert
+            //Assert.False(productService.GetAllProducts().Select(p => p.Id).Max() == productIdFound);
+
+      
+
+            // Arrange
+            /// <summary>
+            /// Creating new services linked with Sql Context.
+            /// </summary >
+
+            IProductRepository productRepository = new ProductRepository(Context);
+            IOrderRepository orderRepository = new OrderRepository(Context);
+            ILanguageService languageService = new LanguageService();
+
+
+            /// <summary>
+            /// Creating new services to simulate localizer.
+            /// </summary >
+            var service = new ServiceCollection();
+            service.AddLogging();
+            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+            var serviceProvider = service.BuildServiceProvider();
+
+            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+
+            //var mockedICart = new Mock<ICart>();
+            //var mockedIProductRepository = new Mock<IProductRepository>();
+            //var mockedIOrerRepository = new Mock<IOrderRepository>();
+            //var mockedILanguageService = new Mock<ILanguageService>();
+
+            var mockedIProductService = new Mock<IProductService>();
+
+            /// <summary>
+            /// Creating a complete ÎproductService.
+            /// </summary >
+            //IProductService productService = new P3AddNewFunctionalityDotNetCore.Models.Services.ProductService(mockedICart, productRepository, orderRepository, localizer);
+
+            ProductViewModel productViewModel15a = new ProductViewModel
+            {
+                Name = "ProductTest15a",
+                Price = "15",
+                Stock = "15",
+                Description = "DescriptionTest15a’",
+                Details = "DétailsTest15a"
+            };
+
+            ProductViewModel productViewModel15b = new ProductViewModel
+            {
+                Name = "ProductTest15b",
+                Price = "15",
+                Stock = "15",
+                Description = "DescriptionTest15b’",
+                Details = "DétailsTest15b"
+            };
+
+
+            mockedIProductService.Setup(s => s.GetAllProductsViewModel());
+            mockedIProductService.Setup(s => s.SaveProduct(productViewModel15a));
+            mockedIProductService.Setup(s => s.SaveProduct(productViewModel15b));
+
+
+
+
+
+
+
+
+
+
+
+        }
+
+        [Fact]
+        public void Test16()
+        {
             // Arrange
             /// <summary>
             /// Creating new services linked with Sql Context.
@@ -268,11 +399,11 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             /// </summary >
             ProductViewModel productViewModel = new ProductViewModel
             {
-                Name = "ProductTest15",
-                Price = "15",
-                Stock = "15",
-                Description = "DescriptionTest15’",
-                Details = "DetailsTest15"
+                Name = "ProductTest16",
+                Price = "16",
+                Stock = "16",
+                Description = "DescriptionTest16’",
+                Details = "DetailsTest16"
             };
 
             /// <summary>
