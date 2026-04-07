@@ -235,101 +235,116 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
         }
 
         [Fact]
+        public void Test13()
+        {
+
+            /// <summary>
+            /// Use of Moq to replicate I(Name)Service.
+            /// No need to buildup dependances like intermediary Interfaces or even SQL.
+            /// </summary >
+            var mockedIProductService = new Mock<IProductService>();
+            var mockedILanguageService = new Mock<ILanguageService>();
+
+            var productController = new ProductController(mockedIProductService.Object,mockedILanguageService.Object);
+
+
+
+            /// <summary>
+            /// Creating minimal Lists to simulate SQL database.
+            /// SaveProduct creates and returns ProductViewModel whereas GetAllProducts returns Product.
+            /// </summary >
+            var productViewModelNoSqlDb = new List<ProductViewModel>();
+            var productNoSqlDb = new List<Product>();
+
+
+
+            /// <summary>
+            /// Use of Moq to Setup the functions we then use and test.
+            /// Setup and Callback must be of the same type.
+            /// (It.IsAny<ProductViewModel>()) in Moq context 
+            /// means the same as (ProductViewModel Product) in regular use context.
+            /// </summary >
+            mockedIProductService.Setup(s => s.SaveProduct(It.IsAny<ProductViewModel>()))
+                .Callback<ProductViewModel>(pvm => productViewModelNoSqlDb.Add(pvm));
+
+            mockedIProductService.Setup(s => s.GetAllProducts()).Returns(productNoSqlDb);
+
+
+            /// <summary>
+            /// Creating our two test productViewModels.
+            /// Both are correctly filled up.
+            /// </summary >
+            ProductViewModel productViewModel13 = new ProductViewModel
+            {
+                Name = "ProductTest13",
+                Price = "-13.13",
+                Stock = "-13",
+                Description = "DescriptionTest13’",
+                Details = "DétailsTest13"
+            };
+
+
+            /// <summary>
+            /// Use of Moq to call the SaveProduct function
+            /// </summary >
+            //mockedIProductService.Object.SaveProduct(productViewModel13);
+
+            productController.Create(productViewModel13);
+
+            /// <summary>
+            /// Counting the number of productViewModel in the list
+            /// </summary >
+            int productViewModelNoSqlDbCount = productViewModelNoSqlDb.Count;
+
+            ///Assert
+            Assert.True(productViewModelNoSqlDbCount == 2);
+            //Assert.True(productController.ModelState.ContainsKey("PriceNotGreaterThan0"));
+            Assert.Contains("StockNotGreaterThanZero", productController.ModelState);
+        }
+
+
+
+
+
+        [Fact]
         public void Test15()
         {
-            //// Arrange
-            ///// <summary>
-            ///// Creating new services linked with Sql Context.
-            ///// </summary >
-            //ICart cart = new Cart();
-            //IProductRepository productRepository = new ProductRepository(Context);
-            //IOrderRepository orderRepository = new OrderRepository(Context);
-
-
-            ///// <summary>
-            ///// Creating new services to simulate localizer.
-            ///// </summary >
-            //var service = new ServiceCollection();
-            //service.AddLogging();
-            //service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
-            //var serviceProvider = service.BuildServiceProvider();
-
-            //var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
-
-
-            ///// <summary>
-            ///// Creating a complete ÎproductService.
-            ///// </summary >
-            //IProductService productService = new P3AddNewFunctionalityDotNetCore.Models.Services.ProductService(cart, productRepository, orderRepository, localizer);
-
-            //// Arrange
-            ///// <summary>
-            ///// Simulate user product creation by filling fields.
-            ///// </summary >
-            //ProductViewModel productViewModel = new ProductViewModel
-            //{
-            //    Name = "ProductTest15",
-            //    Price = "15",
-            //    Stock = "15",
-            //    Description = "DescriptionTest15’",
-            //    Details = "DetailsTest15"
-            //};
-
-            ///// <summary>
-            ///// Access the private static ProductService.MapToProductEntity() function.
-            ///// </summary >
-            //var accessProductMapper = typeof(ProductService).GetField("MapToProductEntity", BindingFlags.NonPublic | BindingFlags.Static);
-
-
-
-            //// Act Product creation 
-            //productService.SaveProduct(productViewModel);
-            //int productIdFound = productService.GetAllProducts().Select(p => p.Id).Max();
-            //var productFound = productService.GetProductById(productIdFound);
-            ////Assert
-            //Assert.True(productService.GetAllProducts().Select(p => p.Id).Max() == productIdFound);
-            //Assert.True(productFound.Name == productViewModel.Name);
-
-            //// Act Product deletion
-            //productService.DeleteProduct(productIdFound);
-            ////Assert
-            //Assert.False(productService.GetAllProducts().Select(p => p.Id).Max() == productIdFound);
-
-      
-
-            // Arrange
-            /// <summary>
-            /// Creating new services linked with Sql Context.
-            /// </summary >
-
-            IProductRepository productRepository = new ProductRepository(Context);
-            IOrderRepository orderRepository = new OrderRepository(Context);
-            ILanguageService languageService = new LanguageService();
-
 
             /// <summary>
-            /// Creating new services to simulate localizer.
+            /// Use of Moq to replicate I(Name)Service.
+            /// No need to buildup dependances like intermediary Interfaces or even SQL.
             /// </summary >
-            var service = new ServiceCollection();
-            service.AddLogging();
-            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
-            var serviceProvider = service.BuildServiceProvider();
-
-            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
-
-
-            //var mockedICart = new Mock<ICart>();
-            //var mockedIProductRepository = new Mock<IProductRepository>();
-            //var mockedIOrerRepository = new Mock<IOrderRepository>();
-            //var mockedILanguageService = new Mock<ILanguageService>();
-
             var mockedIProductService = new Mock<IProductService>();
+            var mockedILanguageService = new Mock<ILanguageService>();
+
+            //var productController = new ProductController(mockedIProductService.Object,mockedILanguageService.Object);
+
+
 
             /// <summary>
-            /// Creating a complete ÎproductService.
+            /// Creating minimal Lists to simulate SQL database.
+            /// SaveProduct creates and returns ProductViewModel whereas GetAllProducts returns Product.
             /// </summary >
-            //IProductService productService = new P3AddNewFunctionalityDotNetCore.Models.Services.ProductService(mockedICart, productRepository, orderRepository, localizer);
+            var productViewModelNoSqlDb = new List<ProductViewModel>();
+            var productNoSqlDb = new List<Product>();
 
+
+
+            /// <summary>
+            /// Use of Moq to Setup the functions we then use and test.
+            /// Setup and Callback must be of the same type.
+            /// (It.IsAny<ProductViewModel>()) in Moq context 
+            /// means the same as (ProductViewModel Product) in regular use context.
+            /// </summary >
+            mockedIProductService.Setup(s => s.SaveProduct(It.IsAny<ProductViewModel>()))
+                .Callback<ProductViewModel>(pvm => productViewModelNoSqlDb.Add(pvm));
+
+            mockedIProductService.Setup(s => s.GetAllProducts()).Returns(productNoSqlDb);
+
+            /// <summary>
+            /// Creating our two test productViewModels.
+            /// Both are correctly filled up.
+            /// </summary >
             ProductViewModel productViewModel15a = new ProductViewModel
             {
                 Name = "ProductTest15a",
@@ -348,20 +363,21 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
                 Details = "DétailsTest15b"
             };
 
+            /// <summary>
+            /// Use of Moq to call the SaveProduct function
+            /// </summary >
+            mockedIProductService.Object.SaveProduct(productViewModel15a);
+            mockedIProductService.Object.SaveProduct(productViewModel15b);
 
-            mockedIProductService.Setup(s => s.GetAllProductsViewModel());
-            mockedIProductService.Setup(s => s.SaveProduct(productViewModel15a));
-            mockedIProductService.Setup(s => s.SaveProduct(productViewModel15b));
+            /// <summary>
+            /// Counting the number of productViewModel in the list
+            /// </summary >
+            int productViewModelNoSqlDbCount = productViewModelNoSqlDb.Count;
 
-
-
-
-
-
-
-
-
-
+            ///Assert
+            Assert.True(productViewModelNoSqlDbCount == 2);
+            Assert.True(productViewModelNoSqlDb[0].Name == "ProductTest15a");
+            Assert.True(productViewModelNoSqlDb[1].Name == "ProductTest15b");
 
         }
 
