@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace P3AddNewFunctionalityDotNetCore.Models.Services
 {
+
     public class ProductService : IProductService
     {
         private readonly ICart _cart;
@@ -132,12 +133,12 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
 
             if (!Attribute3.IsValid(product.Stock))
             {
-                 modelErrors.Add("StockNotAnInteger", _localizer["StockNotAnInteger"]);
+                modelErrors.Add("StockNotAnInteger", _localizer["StockNotAnInteger"]);
             }
 
-            var Attribute4 = new GreaterThanConstraint(product.Stock);
+            var Attribute4 = new RangeAttribute(1, int.MaxValue);
 
-            if (Attribute4.Equals(0) || Attribute4.Equals(null))
+            if (!Attribute4.IsValid(product.Stock))
             {
                 modelErrors.Add("StockNotGreaterThanZero", _localizer["StockNotGreaterThanZero"]);
             }
@@ -159,7 +160,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
             }
 
 
-            var Attribute7 = new PriceNotDouble();
+            var Attribute7 = new RangeAttribute(0.0001, double.MaxValue);
 
             if (!Attribute7.IsValid(product.Price))
             {
@@ -168,6 +169,9 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
 
             return modelErrors;
         }
+
+
+        
         public void SaveProduct(ProductViewModel product)
         {
             var productToAdd = MapToProductEntity(product);

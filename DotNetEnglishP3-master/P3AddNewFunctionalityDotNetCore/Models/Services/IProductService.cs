@@ -19,6 +19,11 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
         /// Use of a dictionnary to ease ModelState tests.
         /// </summary >
         Dictionary<string, string> CheckProductModelErrors(ProductViewModel product);
+
+
+
+
+
         Task<Product> GetProduct(int id);
         Task<IList<Product>> GetProduct();
     }

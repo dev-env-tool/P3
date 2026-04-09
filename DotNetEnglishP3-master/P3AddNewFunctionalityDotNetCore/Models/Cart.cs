@@ -39,6 +39,11 @@ namespace P3AddNewFunctionalityDotNetCore.Models
             return _cartLines.Any() ? _cartLines.Average(l => l.Product.Price) : 0;
         }
 
+        public CartLine GetCartLineByProductId(Product product)
+        {
+            return _cartLines.FirstOrDefault(id => id.Product.Id == product.Id);
+        }
+
         public void Clear() => _cartLines.Clear();
 
         public IEnumerable<CartLine> Lines => _cartLines;

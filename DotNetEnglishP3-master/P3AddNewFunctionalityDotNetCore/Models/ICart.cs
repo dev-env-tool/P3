@@ -14,5 +14,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models
         double GetTotalValue();
 
         double GetAverageValue();
+
+        public CartLine GetCartLineByProductId(Product product);
     }
 }

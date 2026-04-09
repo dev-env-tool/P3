@@ -68,7 +68,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
         //<summary>
         //Use of a "Range" attribute to check wether the field is a double between 1 and signed 4 bytes double = 1.7976931348623157*E+308.
         //</summary>
-        [Range(0.01, double.MaxValue, ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources), ErrorMessageResourceName = "PriceNotGreaterThanZero")]
+        [Range(0.0001, double.MaxValue, ErrorMessageResourceType = typeof(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources), ErrorMessageResourceName = "PriceNotGreaterThanZero")]
         
         public string Price { get; set; }
     }
