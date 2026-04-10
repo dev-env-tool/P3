@@ -16,7 +16,9 @@ using P3AddNewFunctionalityDotNetCore.Models.Services;
 using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
 using P3AddNewFunctionalityDotNetCore.Resources.Models.Services;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Data.Common;
 using System.Drawing.Text;
@@ -24,7 +26,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using Xunit;
+using System.Threading;
 //using System.Security.Cryptography.X509Certificates;
 
 
@@ -97,14 +101,15 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
 
 
+        /// <summary>
+        /// Unit tests of the CheckProductModelErrors
+        /// With Mocked services => callbase = true
+        /// </summary>
+
         [Fact]
         public void CheckProductModelErrorsShouldReturnMissingName()
         {
             /// Arrange
-            
-
-            /// 
-
 
             /// <summary>
             /// Use of Moq to replicate I(Name)Service.
@@ -135,7 +140,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
             /// 
             /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
-            /// The issue is : when we modifiy something ito the real function, we should change it in every test as well.
+            /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
             /// 
             /// Possible solution but it adds a new independent class to be called :
             /// 
@@ -200,11 +205,8 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             };
 
             ///// <summary>
-            ///// Creating a temporary 
+            ///// Creating a temporary dictionnary to store results 
             ///// </summary >
-            //var testErrorDictionnary = new Dictionary<string, string>();
-
-            //testErrorDictionnary = mockedIProductService.Object.CheckProductModelErrors(productViewModel);
             Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
 
 
@@ -256,7 +258,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
             /// 
             /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
-            /// The issue is : when we modifiy something ito the real function, we should change it in every test as well.
+            /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
             /// 
             /// Possible solution but it adds a new independent class to be called :
             /// 
@@ -288,11 +290,8 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             };
 
             ///// <summary>
-            ///// Creating a temporary 
-            ///// </summary >
-            //var testErrorDictionnary = new Dictionary<string, string>();
-
-            //testErrorDictionnary = mockedIProductService.Object.CheckProductModelErrors(productViewModel);
+            ///// Creating a temporary dictionnary to store results
+            ///// </summary >       
             Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
 
             ///Act
@@ -340,7 +339,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
             /// 
             /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
-            /// The issue is : when we modifiy something ito the real function, we should change it in every test as well.
+            /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
             /// 
             /// Possible solution but it adds a new independent class to be called :
             /// 
@@ -372,11 +371,8 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             };
 
             ///// <summary>
-            ///// Creating a temporary 
+            ///// Creating a temporary dictionnary to store results
             ///// </summary >
-            //var testErrorDictionnary = new Dictionary<string, string>();
-
-            //testErrorDictionnary = mockedIProductService.Object.CheckProductModelErrors(productViewModel);
             Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
 
             ///Act
@@ -423,7 +419,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
             /// 
             /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
-            /// The issue is : when we modifiy something ito the real function, we should change it in every test as well.
+            /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
             /// 
             /// Possible solution but it adds a new independent class to be called :
             /// 
@@ -455,11 +451,8 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             };
 
             ///// <summary>
-            ///// Creating a temporary 
+            ///// Creating a temporary dictionnary to store results
             ///// </summary >
-            //var testErrorDictionnary = new Dictionary<string, string>();
-
-            //testErrorDictionnary = mockedIProductService.Object.CheckProductModelErrors(productViewModel);
             Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
 
             ///Act
@@ -474,7 +467,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
         [Fact]
 
-        public void CheckProductModelErrorsShouldReturnPriceNotGreaterThan0()
+        public void CheckProductModelErrorsShouldReturnPriceNotGreaterThanZero()
         {
             /// Arrange
 
@@ -507,7 +500,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
             /// 
             /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
-            /// The issue is : when we modifiy something ito the real function, we should change it in every test as well.
+            /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
             /// 
             /// Possible solution but it adds a new independent class to be called :
             /// 
@@ -539,11 +532,8 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             };
 
             ///// <summary>
-            ///// Creating a temporary 
+            ///// Creating a temporary dictionnary to store results
             ///// </summary >
-            //var testErrorDictionnary = new Dictionary<string, string>();
-
-            //testErrorDictionnary = mockedIProductService.Object.CheckProductModelErrors(productViewModel);
             Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
 
             ///Act
@@ -556,7 +546,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
         [Fact]
 
-        public void CheckProductModelErrorsShouldReturnStockNotGreaterThan0()
+        public void CheckProductModelErrorsShouldReturnStockNotGreaterThan0StockNotAnInteger()
         {
             /// Arrange
 
@@ -589,7 +579,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
             /// 
             /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
-            /// The issue is : when we modifiy something ito the real function, we should change it in every test as well.
+            /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
             /// 
             /// Possible solution but it adds a new independent class to be called :
             /// 
@@ -615,40 +605,276 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             {
                 Name = "Name",
                 Price = "10",
-                Stock = "-0",
+                Stock = "-0.3",
                 Description = "DescriptionTest’",
                 Details = "DétailsTest"
             };
 
             ///// <summary>
-            ///// Creating a temporary 
+            ///// Creating a temporary dictionnary to store results
             ///// </summary >
-            //var testErrorDictionnary = new Dictionary<string, string>();
-
-            //testErrorDictionnary = mockedIProductService.Object.CheckProductModelErrors(productViewModel);
             Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
 
             ///Act
             errorTempDictionary = mockedProductService.Object.CheckProductModelErrors(productViewModel);
 
             ///Assert
-            Assert.True(errorTempDictionary.Count == 1);
+            Assert.True(errorTempDictionary.Count == 2);
             Assert.True(errorTempDictionary.ContainsKey("StockNotGreaterThanZero"));
+            Assert.True(errorTempDictionary.ContainsKey("StockNotAnInteger"));
         }
 
-        //[Fact]
 
-        //public void CheckProductControllerModelStateReturnsMissingNameMissingPriceMissingStock()
-        //{
 
-        //}
 
-        //[Fact]
+        /// <summary>
+        /// Unit tests of the ModelState given by ProductController's action
+        /// With real Interfaces
+        /// </summary>
 
-        //public void CheckProductControllerModelStateReturnsPriceNotANumberStockNotANumber()
-        //{
 
-        //}
+
+
+
+        [Fact]
+
+        public void CheckProductControllerModelStateReturnsMissingNameMissingPriceMissingStock()
+        {
+            /// Arrange
+
+            /// <summary>
+            /// In this case we will test product controller's modelstate
+            /// We instanciate interfaces to avoid using moq with the controller
+            /// </summary >
+            ICart cart = new Cart();
+            IProductRepository productRepository = new ProductRepository(Context);
+            IOrderRepository orderRepository = new OrderRepository(Context);
+            ILanguageService languageService = new LanguageService();
+
+
+            /// <summary>
+            /// Creating new services to simulate localizer
+            /// as there is no Interface ILocalizer.
+            /// </summary >
+            var service = new ServiceCollection();
+            service.AddLogging();
+            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+            var serviceProvider = service.BuildServiceProvider();
+
+            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+            /// <summary>
+            /// Create a new ProductService to instanciate the productController
+            /// </summary >
+            IProductService productService = new ProductService(cart, productRepository, orderRepository, localizer);
+
+            /// <summary>
+            /// Create a new ProductController
+            /// </summary>
+
+            ProductController productController = new ProductController(productService, languageService);
+
+            /// <summary>
+            /// Creating our two test productViewModels.
+            /// Both are correctly filled up.
+            /// </summary >
+            ProductViewModel productViewModel = new ProductViewModel
+            {
+                Name = "",
+                Price = "",
+                Stock = "",
+                Description = "DescriptionTest’",
+                Details = "DétailsTest"
+            };
+
+
+            ///Act
+            productController.Create(productViewModel);
+
+
+            ///Assert
+            Assert.True(productController.ModelState.Count == 3);
+            Assert.True(productController.ModelState.ContainsKey("MissingName"));
+            Assert.True(productController.ModelState.ContainsKey("MissingPrice"));
+            Assert.True(productController.ModelState.ContainsKey("MissingStock"));
+
+        }
+
+        [Fact]
+
+        public void CheckProductControllerModelStateReturnsPriceNotANumberStockNotAnIntegerPriceNotGreaterThanZeroStockNotGreaterThanZero()
+        {
+            /// Arrange
+
+            /// <summary>
+            /// In this case we will test product controller's modelstate
+            /// We instanciate interfaces to avoid using moq with the controller
+            /// </summary >
+            ICart cart = new Cart();
+            IProductRepository productRepository = new ProductRepository(Context);
+            IOrderRepository orderRepository = new OrderRepository(Context);
+            ILanguageService languageService = new LanguageService();
+
+
+            /// <summary>
+            /// Creating new services to simulate localizer
+            /// as there is no Interface ILocalizer.
+            /// </summary >
+            var service = new ServiceCollection();
+            service.AddLogging();
+            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+            var serviceProvider = service.BuildServiceProvider();
+
+            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+            /// <summary>
+            /// Create a new ProductService to instanciate the productController
+            /// </summary >
+            IProductService productService = new ProductService(cart, productRepository, orderRepository, localizer);
+
+            /// <summary>
+            /// Create a new ProductController
+            /// </summary>
+
+            ProductController productController = new ProductController(productService, languageService);
+
+            /// <summary>
+            /// Creating our two test productViewModels.
+            /// Both are correctly filled up.
+            /// </summary >
+            ProductViewModel productViewModel = new ProductViewModel
+            {
+                Name = "ProductName",
+                Price = "wrongpricetest",
+                Stock = "wrongstocktest",
+                Description = "DescriptionTest’",
+                Details = "DétailsTest"
+            };
+
+
+            ///Act
+            productController.Create(productViewModel);
+
+
+            ///Assert
+            Assert.True(productController.ModelState.Count == 4);
+            Assert.True(productController.ModelState.ContainsKey("PriceNotANumber"));
+            Assert.True(productController.ModelState.ContainsKey("StockNotAnInteger"));
+            Assert.True(productController.ModelState.ContainsKey("PriceNotGreaterThanZero"));
+            Assert.True(productController.ModelState.ContainsKey("StockNotGreaterThanZero"));
+        }
+
+
+        [Fact]
+
+        public void CheckProductViewModelReturnsPriceNotANumberStockNotAnIntegerPriceNotGreaterThanZeroStockNotGreaterThanZero()
+        {
+            /// Arrange
+
+            /// <summary>
+            /// In this case we will test product controller's modelstate
+            /// We instanciate interfaces to avoid using moq with the controller
+            /// </summary >
+            ICart cart = new Cart();
+            IProductRepository productRepository = new ProductRepository(Context);
+            IOrderRepository orderRepository = new OrderRepository(Context);
+            ILanguageService languageService = new LanguageService();
+
+
+            /// <summary>
+            /// Creating new services to simulate localizer
+            /// as there is no Interface ILocalizer.
+            /// </summary >
+            var service = new ServiceCollection();
+            service.AddLogging();
+            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+            var serviceProvider = service.BuildServiceProvider();
+
+            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+            /// <summary>
+            /// Create a new ProductService to instanciate the productController
+            /// </summary >
+            IProductService productService = new ProductService(cart, productRepository, orderRepository, localizer);
+
+            /// <summary>
+            /// Create a new ProductController
+            /// </summary>
+
+            ProductController productController = new ProductController(productService, languageService);
+
+
+            ///Act
+            /// <summary>
+            /// Creating our two test productViewModels.
+            /// Both are correctly filled up.
+            /// </summary >
+            ProductViewModel productViewModel = new ProductViewModel
+            {
+                Name = "ProductName",
+                Price = "wrongpricetest",
+                Stock = "wrongstocktest",
+                Description = "DescriptionTest’",
+                Details = "DétailsTest"
+            };
+
+            ///Assert
+            Assert.True(productController.ModelState.Count == 4);
+            Assert.True(productController.ModelState.ContainsKey("PriceNotANumber"));
+            Assert.True(productController.ModelState.ContainsKey("StockNotAnInteger"));
+            Assert.True(productController.ModelState.ContainsKey("PriceNotGreaterThanZero"));
+            Assert.True(productController.ModelState.ContainsKey("StockNotGreaterThanZero"));
+        }
+
+
+        [Fact]
+
+        public void CheckProductViewModelReturnsMissingNameMissingPriceMissingStock()
+        {
+            /// Arrange
+
+
+            ProductViewModel productViewModel = new ProductViewModel();
+
+            var context = new ValidationContext(productViewModel);
+            var modelErrors = new List<ValidationResult>();
+
+            var culture = Thread.CurrentThread.CurrentCulture;
+            var UIculture = Thread.CurrentThread.CurrentUICulture;
+
+
+            try
+            { 
+                /// Use of a try block to force the culture to get to English
+                /// In debogger mode culture and UIculture will stay at their previous state
+                /// This test works only if the error message exists in English
+                /// Otherwise we would create custom attributes to get in this test the key MissingField, FieldNot...
+                Thread.CurrentThread.CurrentCulture = new CultureInfo("en-En");
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-En");
+
+                /// Act
+                productViewModel.Name = "";
+                productViewModel.Price = "10";
+                productViewModel.Stock = "10";
+                productViewModel.Description = "DescriptionTest’";
+                productViewModel.Details = "DétailsTest";
+
+                bool isProductViewModelValid = Validator.TryValidateObject(productViewModel, context, modelErrors, true);
+
+                /// Assert
+                Assert.True(modelErrors.Count==1);    
+                Assert.Contains(modelErrors, vr => vr.ErrorMessage.Contains(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources.MissingName));
+            }
+
+            finally
+            {
+                /// Use of a finally block to get the ulture back to their previous states
+                Thread.CurrentThread.CurrentCulture = culture;
+                Thread.CurrentThread.CurrentUICulture = UIculture;
+            }
+        }
+
+
 
 
         //[Fact]

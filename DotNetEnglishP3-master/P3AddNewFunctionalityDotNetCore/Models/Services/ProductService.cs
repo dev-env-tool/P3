@@ -178,6 +178,9 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
             _productRepository.SaveProduct(productToAdd);
         }
 
+        
+
+
         private static Product MapToProductEntity(ProductViewModel product)
         {
             Product productEntity = new Product
