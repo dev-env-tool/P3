@@ -34,8 +34,10 @@ using System.Threading;
 
 namespace P3AddNewFunctionalityDotNetCore.Tests
 {
-    
 
+    /// <Summary>
+    /// Creating an SQL datatabse context for all tests needing sql
+    /// <Summary>
     public class DatabaseFixture : IDisposable
     {
 
@@ -100,805 +102,819 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
         }
 
 
-
-        /// <summary>
-        /// Unit tests of the CheckProductModelErrors
-        /// With Mocked services => callbase = true
-        /// </summary>
-
-        [Fact]
-        public void CheckProductModelErrorsShouldReturnMissingName()
+        public class UnitTests : DatabaseFixture
         {
-            /// Arrange
-
-            /// <summary>
-            /// Use of Moq to replicate I(Name)Service.
-            /// No need to buildup dependances like intermediary Interfaces or even SQL.
-            /// </summary >
-
-            var mockedICart = new Mock<ICart>();
-            var mockedIProductRepository = new Mock<IProductRepository>();
-            var mockedIOrderRepository = new Mock<IOrderRepository>();
-            var mockedILanguageService = new Mock<ILanguageService>();
 
 
+                /// <summary>
+                /// Unit tests of CheckProductModelErrors
+                /// With Mocked services => callbase = true
+                /// </summary>
 
-            /// <summary>
-            /// Creating new services to simulate localizer
-            /// as there is no Interface ILocalizer.
-            /// </summary >
-            var service = new ServiceCollection();
-            service.AddLogging();
-            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
-            var serviceProvider = service.BuildServiceProvider();
+                [Fact]
+            public void CheckProductModelErrors_ShouldReturn_MissingName()
+            {
+                /// Arrange
 
-            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+                /// <summary>
+                /// Use of Moq to replicate I(Name)Service.
+                /// No need to buildup dependances like intermediary Interfaces or even SQL.
+                /// </summary >
 
-            /// <summary>
-            /// Here we call the real base functions as the tests have been created after the programme.
-            /// We can mock virtual Interfaces to use the constructor.
-            /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
-            /// 
-            /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
-            /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
-            /// 
-            /// Possible solution but it adds a new independent class to be called :
-            /// 
-            ///     mockedProductService.Setup(s => s.CheckProductModelErrors(It.IsAny<ProductViewModel>()))
-            ///     .Returns((ProductViewModel pvm) =>
-            ///     {
-            ///     var testErrorDictionnary = new Dictionary<string, string>();
-            ///     testErrorDictionnary = HelperClass.CheckProductModelErrorsHelper(pvm);
-            ///     return testErrorDictionnary;
-            ///     });
-            /// 
-            /// Otherwise we would have to create a new independent class containing the logic via a helper in it.
-
-
-            var mockedProductService = new Mock<ProductService>(mockedICart.Object, mockedIProductRepository.Object, mockedIOrderRepository.Object, localizer) { CallBase = true };
+                var mockedICart = new Mock<ICart>();
+                var mockedIProductRepository = new Mock<IProductRepository>();
+                var mockedIOrderRepository = new Mock<IOrderRepository>();
+                var mockedILanguageService = new Mock<ILanguageService>();
 
 
 
-            /// <summary>
-            /// Access to the ProductController.
-            /// </summary >
-            //ProductController productController = new ProductController(mockedIProductService, mockedILanguageService);
+                /// <summary>
+                /// Creating new services to simulate localizer
+                /// as there is no Interface ILocalizer.
+                /// </summary >
+                var service = new ServiceCollection();
+                service.AddLogging();
+                service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+                var serviceProvider = service.BuildServiceProvider();
 
-            /// <summary>
-            /// Creating minimal Lists to simulate SQL database.
-            /// SaveProduct creates and returns ProductViewModel whereas GetAllProducts returns Product.
-            /// </summary >
-            //var productViewModelNoSqlDb = new List<ProductViewModel>();
-            //var productNoSqlDb = new List<Product>();
+                var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+                /// <summary>
+                /// Here we call the real base functions as the tests have been created after the programme.
+                /// We can mock virtual Interfaces to use the constructor.
+                /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
+                /// 
+                /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
+                /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
+                /// 
+                /// Possible solution but it adds a new independent class to be called :
+                /// 
+                ///     mockedProductService.Setup(s => s.CheckProductModelErrors(It.IsAny<ProductViewModel>()))
+                ///     .Returns((ProductViewModel pvm) =>
+                ///     {
+                ///     var testErrorDictionnary = new Dictionary<string, string>();
+                ///     testErrorDictionnary = HelperClass.CheckProductModelErrorsHelper(pvm);
+                ///     return testErrorDictionnary;
+                ///     });
+                /// 
+                /// Otherwise we would have to create a new independent class containing the logic via a helper in it.
+
+
+                var mockedProductService = new Mock<ProductService>(mockedICart.Object, mockedIProductRepository.Object, mockedIOrderRepository.Object, localizer) { CallBase = true };
 
 
 
-            /// <summary>
-            /// Use of Moq to Setup the functions we then use and test.
-            /// Setup and Callback must be of the same type.
-            /// (It.IsAny<ProductViewModel>()) in Moq context 
-            /// means the same as (ProductViewModel Product) in regular use context.
-            /// </summary >
-            /// mockedProductService.Setup(s => s.CheckProductModelErrors(It.IsAny<ProductViewModel>()))
-            ///    //.Callback<ProductViewModel>(pvm => productViewModelNoSqlDb.Add(pvm))
-            ///    .Returns((ProductViewModel pvm) =>
-            ///    {
-            ///        var testErrorDictionnary = new Dictionary<string, string>();
-            ///        testErrorDictionnary = mockedProductService.Object.CheckProductModelErrorsHelper(pvm);
-            ///        return testErrorDictionnary;
-            ///    });
+                /// <summary>
+                /// Access to the ProductController.
+                /// </summary >
+                //ProductController productController = new ProductController(mockedIProductService, mockedILanguageService);
+
+                /// <summary>
+                /// Creating minimal Lists to simulate SQL database.
+                /// SaveProduct creates and returns ProductViewModel whereas GetAllProducts returns Product.
+                /// </summary >
+                //var productViewModelNoSqlDb = new List<ProductViewModel>();
+                //var productNoSqlDb = new List<Product>();
+
+
+
+                /// <summary>
+                /// Use of Moq to Setup the functions we then use and test.
+                /// Setup and Callback must be of the same type.
+                /// (It.IsAny<ProductViewModel>()) in Moq context 
+                /// means the same as (ProductViewModel Product) in regular use context.
+                /// </summary >
+                /// mockedProductService.Setup(s => s.CheckProductModelErrors(It.IsAny<ProductViewModel>()))
+                ///    //.Callback<ProductViewModel>(pvm => productViewModelNoSqlDb.Add(pvm))
+                ///    .Returns((ProductViewModel pvm) =>
+                ///    {
+                ///        var testErrorDictionnary = new Dictionary<string, string>();
+                ///        testErrorDictionnary = mockedProductService.Object.CheckProductModelErrorsHelper(pvm);
+                ///        return testErrorDictionnary;
+                ///    });
             
-            //mockedIProductService.Setup(s => s.GetAllProducts()).Returns(productNoSqlDb);
+                //mockedIProductService.Setup(s => s.GetAllProducts()).Returns(productNoSqlDb);
 
 
-            /// <summary>
-            /// Creating our two test productViewModels.
-            /// Both are correctly filled up.
-            /// </summary >
-            ProductViewModel productViewModel = new ProductViewModel
-            {
-                Name = "",
-                Price = "10",
-                Stock = "10",
-                Description = "DescriptionTest’",
-                Details = "DétailsTest"
-            };
+                /// <summary>
+                /// Creating our two test productViewModels.
+                /// Both are correctly filled up.
+                /// </summary >
+                ProductViewModel productViewModel = new ProductViewModel
+                {
+                    Name = "",
+                    Price = "10",
+                    Stock = "10",
+                    Description = "DescriptionTest’",
+                    Details = "DétailsTest"
+                };
 
-            ///// <summary>
-            ///// Creating a temporary dictionnary to store results 
-            ///// </summary >
-            Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
+                ///// <summary>
+                ///// Creating a temporary dictionnary to store results 
+                ///// </summary >
+                Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
 
 
-            ///Act
-            errorTempDictionary = mockedProductService.Object.CheckProductModelErrors(productViewModel);
+                ///Act
+                errorTempDictionary = mockedProductService.Object.CheckProductModelErrors(productViewModel);
 
-            ///Assert
-            Assert.True(errorTempDictionary.Count == 1);
-            Assert.True(errorTempDictionary.ContainsKey("MissingName"));
+                ///Assert
+                Assert.True(errorTempDictionary.Count == 1);
+                Assert.True(errorTempDictionary.ContainsKey("MissingName"));
 
 
-        }
-
-
-
-
-        [Fact]
-
-        public void CheckProductModelErrorsShouldReturnMissingPrice()
-        {
-            /// Arrange
-
-            /// <summary>
-            /// Use of Moq to replicate I(Name)Service.
-            /// No need to buildup dependances like intermediary Interfaces or even SQL.
-            /// </summary >
-
-            var mockedICart = new Mock<ICart>();
-            var mockedIProductRepository = new Mock<IProductRepository>();
-            var mockedIOrderRepository = new Mock<IOrderRepository>();
-            var mockedILanguageService = new Mock<ILanguageService>();
-
-
-
-            /// <summary>
-            /// Creating new services to simulate localizer
-            /// as there is no Interface ILocalizer.
-            /// </summary >
-            var service = new ServiceCollection();
-            service.AddLogging();
-            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
-            var serviceProvider = service.BuildServiceProvider();
-
-            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
-
-            /// <summary>
-            /// Here we call the real base functions as the tests have been created after the programme.
-            /// We can mock virtual Interfaces to use the constructor.
-            /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
-            /// 
-            /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
-            /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
-            /// 
-            /// Possible solution but it adds a new independent class to be called :
-            /// 
-            ///     mockedProductService.Setup(s => s.CheckProductModelErrors(It.IsAny<ProductViewModel>()))
-            ///     .Returns((ProductViewModel pvm) =>
-            ///     {
-            ///     var testErrorDictionnary = new Dictionary<string, string>();
-            ///     testErrorDictionnary = HelperClass.CheckProductModelErrorsHelper(pvm);
-            ///     return testErrorDictionnary;
-            ///     });
-            /// 
-            /// Otherwise we would have to create a new independent class containing the logic via a helper in it.
-
-
-            var mockedProductService = new Mock<ProductService>(mockedICart.Object, mockedIProductRepository.Object, mockedIOrderRepository.Object, localizer) { CallBase = true };
-
-
-            /// <summary>
-            /// Creating our two test productViewModels.
-            /// Both are correctly filled up.
-            /// </summary >
-            ProductViewModel productViewModel = new ProductViewModel
-            {
-                Name = "Name",
-                Price = "",
-                Stock = "10",
-                Description = "DescriptionTest’",
-                Details = "DétailsTest"
-            };
-
-            ///// <summary>
-            ///// Creating a temporary dictionnary to store results
-            ///// </summary >       
-            Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
-
-            ///Act
-            errorTempDictionary = mockedProductService.Object.CheckProductModelErrors(productViewModel);
-
-            ///Assert
-            Assert.True(errorTempDictionary.Count == 1);
-            Assert.True(errorTempDictionary.ContainsKey("MissingPrice"));
-        }
-
-
-
-        [Fact]
-
-        public void CheckProductModelErrorsShouldReturnMissingStock()
-        {
-            /// Arrange
-
-            /// <summary>
-            /// Use of Moq to replicate I(Name)Service.
-            /// No need to buildup dependances like intermediary Interfaces or even SQL.
-            /// </summary >
-
-            var mockedICart = new Mock<ICart>();
-            var mockedIProductRepository = new Mock<IProductRepository>();
-            var mockedIOrderRepository = new Mock<IOrderRepository>();
-            var mockedILanguageService = new Mock<ILanguageService>();
-
-
-
-            /// <summary>
-            /// Creating new services to simulate localizer
-            /// as there is no Interface ILocalizer.
-            /// </summary >
-            var service = new ServiceCollection();
-            service.AddLogging();
-            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
-            var serviceProvider = service.BuildServiceProvider();
-
-            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
-
-            /// <summary>
-            /// Here we call the real base functions as the tests have been created after the programme.
-            /// We can mock virtual Interfaces to use the constructor.
-            /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
-            /// 
-            /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
-            /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
-            /// 
-            /// Possible solution but it adds a new independent class to be called :
-            /// 
-            ///     mockedProductService.Setup(s => s.CheckProductModelErrors(It.IsAny<ProductViewModel>()))
-            ///     .Returns((ProductViewModel pvm) =>
-            ///     {
-            ///     var testErrorDictionnary = new Dictionary<string, string>();
-            ///     testErrorDictionnary = HelperClass.CheckProductModelErrorsHelper(pvm);
-            ///     return testErrorDictionnary;
-            ///     });
-            /// 
-            /// Otherwise we would have to create a new independent class containing the logic via a helper in it.
-
-
-            var mockedProductService = new Mock<ProductService>(mockedICart.Object, mockedIProductRepository.Object, mockedIOrderRepository.Object, localizer) { CallBase = true };
-
-
-            /// <summary>
-            /// Creating our two test productViewModels.
-            /// Both are correctly filled up.
-            /// </summary >
-            ProductViewModel productViewModel = new ProductViewModel
-            {
-                Name = "Name",
-                Price = "10",
-                Stock = "",
-                Description = "DescriptionTest’",
-                Details = "DétailsTest"
-            };
-
-            ///// <summary>
-            ///// Creating a temporary dictionnary to store results
-            ///// </summary >
-            Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
-
-            ///Act
-            errorTempDictionary = mockedProductService.Object.CheckProductModelErrors(productViewModel);
-
-            ///Assert
-            Assert.True(errorTempDictionary.Count == 1);
-            Assert.True(errorTempDictionary.ContainsKey("MissingStock"));
-        }
-
-
-        [Fact]
-
-        public void CheckProductModelErrorsShouldReturnPriceNotANumberAndPriceNotGreaterThanZero()
-        {
-            /// Arrange
-
-            /// <summary>
-            /// Use of Moq to replicate I(Name)Service.
-            /// No need to buildup dependances like intermediary Interfaces or even SQL.
-            /// </summary >
-
-            var mockedICart = new Mock<ICart>();
-            var mockedIProductRepository = new Mock<IProductRepository>();
-            var mockedIOrderRepository = new Mock<IOrderRepository>();
-            var mockedILanguageService = new Mock<ILanguageService>();
-
-
-
-            /// <summary>
-            /// Creating new services to simulate localizer
-            /// as there is no Interface ILocalizer.
-            /// </summary >
-            var service = new ServiceCollection();
-            service.AddLogging();
-            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
-            var serviceProvider = service.BuildServiceProvider();
-
-            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
-
-            /// <summary>
-            /// Here we call the real base functions as the tests have been created after the programme.
-            /// We can mock virtual Interfaces to use the constructor.
-            /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
-            /// 
-            /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
-            /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
-            /// 
-            /// Possible solution but it adds a new independent class to be called :
-            /// 
-            ///     mockedProductService.Setup(s => s.CheckProductModelErrors(It.IsAny<ProductViewModel>()))
-            ///     .Returns((ProductViewModel pvm) =>
-            ///     {
-            ///     var testErrorDictionnary = new Dictionary<string, string>();
-            ///     testErrorDictionnary = HelperClass.CheckProductModelErrorsHelper(pvm);
-            ///     return testErrorDictionnary;
-            ///     });
-            /// 
-            /// Otherwise we would have to create a new independent class containing the logic via a helper in it.
-
-
-            var mockedProductService = new Mock<ProductService>(mockedICart.Object, mockedIProductRepository.Object, mockedIOrderRepository.Object, localizer) { CallBase = true };
-
-
-            /// <summary>
-            /// Creating our two test productViewModels.
-            /// Both are correctly filled up.
-            /// </summary >
-            ProductViewModel productViewModel = new ProductViewModel
-            {
-                Name = "Name",
-                Price = "price-+=",
-                Stock = "10",
-                Description = "DescriptionTest’",
-                Details = "DétailsTest"
-            };
-
-            ///// <summary>
-            ///// Creating a temporary dictionnary to store results
-            ///// </summary >
-            Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
-
-            ///Act
-            errorTempDictionary = mockedProductService.Object.CheckProductModelErrors(productViewModel);
-
-            ///Assert
-            Assert.True(errorTempDictionary.Count == 2);
-            Assert.True(errorTempDictionary.ContainsKey("PriceNotANumber"));
-            Assert.True(errorTempDictionary.ContainsKey("PriceNotGreaterThanZero"));
-        }
-
-
-        [Fact]
-
-        public void CheckProductModelErrorsShouldReturnPriceNotGreaterThanZero()
-        {
-            /// Arrange
-
-            /// <summary>
-            /// Use of Moq to replicate I(Name)Service.
-            /// No need to buildup dependances like intermediary Interfaces or even SQL.
-            /// </summary >
-
-            var mockedICart = new Mock<ICart>();
-            var mockedIProductRepository = new Mock<IProductRepository>();
-            var mockedIOrderRepository = new Mock<IOrderRepository>();
-            var mockedILanguageService = new Mock<ILanguageService>();
-
-
-
-            /// <summary>
-            /// Creating new services to simulate localizer
-            /// as there is no Interface ILocalizer.
-            /// </summary >
-            var service = new ServiceCollection();
-            service.AddLogging();
-            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
-            var serviceProvider = service.BuildServiceProvider();
-
-            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
-
-            /// <summary>
-            /// Here we call the real base functions as the tests have been created after the programme.
-            /// We can mock virtual Interfaces to use the constructor.
-            /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
-            /// 
-            /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
-            /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
-            /// 
-            /// Possible solution but it adds a new independent class to be called :
-            /// 
-            ///     mockedProductService.Setup(s => s.CheckProductModelErrors(It.IsAny<ProductViewModel>()))
-            ///     .Returns((ProductViewModel pvm) =>
-            ///     {
-            ///     var testErrorDictionnary = new Dictionary<string, string>();
-            ///     testErrorDictionnary = HelperClass.CheckProductModelErrorsHelper(pvm);
-            ///     return testErrorDictionnary;
-            ///     });
-            /// 
-            /// Otherwise we would have to create a new independent class containing the logic via a helper in it.
-
-
-            var mockedProductService = new Mock<ProductService>(mockedICart.Object, mockedIProductRepository.Object, mockedIOrderRepository.Object, localizer) { CallBase = true };
-
-
-            /// <summary>
-            /// Creating our two test productViewModels.
-            /// Both are correctly filled up.
-            /// </summary >
-            ProductViewModel productViewModel = new ProductViewModel
-            {
-                Name = "Name",
-                Price = "-10",
-                Stock = "10",
-                Description = "DescriptionTest’",
-                Details = "DétailsTest"
-            };
-
-            ///// <summary>
-            ///// Creating a temporary dictionnary to store results
-            ///// </summary >
-            Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
-
-            ///Act
-            errorTempDictionary = mockedProductService.Object.CheckProductModelErrors(productViewModel);
-
-            ///Assert
-            Assert.True(errorTempDictionary.Count == 1);
-            Assert.True(errorTempDictionary.ContainsKey("PriceNotGreaterThanZero"));
-        }
-
-        [Fact]
-
-        public void CheckProductModelErrorsShouldReturnStockNotGreaterThan0StockNotAnInteger()
-        {
-            /// Arrange
-
-            /// <summary>
-            /// Use of Moq to replicate I(Name)Service.
-            /// No need to buildup dependances like intermediary Interfaces or even SQL.
-            /// </summary >
-
-            var mockedICart = new Mock<ICart>();
-            var mockedIProductRepository = new Mock<IProductRepository>();
-            var mockedIOrderRepository = new Mock<IOrderRepository>();
-            var mockedILanguageService = new Mock<ILanguageService>();
-
-
-
-            /// <summary>
-            /// Creating new services to simulate localizer
-            /// as there is no Interface ILocalizer.
-            /// </summary >
-            var service = new ServiceCollection();
-            service.AddLogging();
-            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
-            var serviceProvider = service.BuildServiceProvider();
-
-            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
-
-            /// <summary>
-            /// Here we call the real base functions as the tests have been created after the programme.
-            /// We can mock virtual Interfaces to use the constructor.
-            /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
-            /// 
-            /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
-            /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
-            /// 
-            /// Possible solution but it adds a new independent class to be called :
-            /// 
-            ///     mockedProductService.Setup(s => s.CheckProductModelErrors(It.IsAny<ProductViewModel>()))
-            ///     .Returns((ProductViewModel pvm) =>
-            ///     {
-            ///     var testErrorDictionnary = new Dictionary<string, string>();
-            ///     testErrorDictionnary = HelperClass.CheckProductModelErrorsHelper(pvm);
-            ///     return testErrorDictionnary;
-            ///     });
-            /// 
-            /// Otherwise we would have to create a new independent class containing the logic via a helper in it.
-
-
-            var mockedProductService = new Mock<ProductService>(mockedICart.Object, mockedIProductRepository.Object, mockedIOrderRepository.Object, localizer) { CallBase = true };
-
-
-            /// <summary>
-            /// Creating our two test productViewModels.
-            /// Both are correctly filled up.
-            /// </summary >
-            ProductViewModel productViewModel = new ProductViewModel
-            {
-                Name = "Name",
-                Price = "10",
-                Stock = "-0.3",
-                Description = "DescriptionTest’",
-                Details = "DétailsTest"
-            };
-
-            ///// <summary>
-            ///// Creating a temporary dictionnary to store results
-            ///// </summary >
-            Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
-
-            ///Act
-            errorTempDictionary = mockedProductService.Object.CheckProductModelErrors(productViewModel);
-
-            ///Assert
-            Assert.True(errorTempDictionary.Count == 2);
-            Assert.True(errorTempDictionary.ContainsKey("StockNotGreaterThanZero"));
-            Assert.True(errorTempDictionary.ContainsKey("StockNotAnInteger"));
-        }
-
-
-
-
-        /// <summary>
-        /// Unit tests of the ModelState given by ProductController's action
-        /// With real Interfaces
-        /// </summary>
-
-
-
-
-
-        [Fact]
-
-        public void CheckProductControllerModelStateReturnsMissingNameMissingPriceMissingStock()
-        {
-            /// Arrange
-
-            /// <summary>
-            /// In this case we will test product controller's modelstate
-            /// We instanciate interfaces to avoid using moq with the controller
-            /// </summary >
-            ICart cart = new Cart();
-            IProductRepository productRepository = new ProductRepository(Context);
-            IOrderRepository orderRepository = new OrderRepository(Context);
-            ILanguageService languageService = new LanguageService();
-
-
-            /// <summary>
-            /// Creating new services to simulate localizer
-            /// as there is no Interface ILocalizer.
-            /// </summary >
-            var service = new ServiceCollection();
-            service.AddLogging();
-            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
-            var serviceProvider = service.BuildServiceProvider();
-
-            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
-
-            /// <summary>
-            /// Create a new ProductService to instanciate the productController
-            /// </summary >
-            IProductService productService = new ProductService(cart, productRepository, orderRepository, localizer);
-
-            /// <summary>
-            /// Create a new ProductController
-            /// </summary>
-
-            ProductController productController = new ProductController(productService, languageService);
-
-            /// <summary>
-            /// Creating our two test productViewModels.
-            /// Both are correctly filled up.
-            /// </summary >
-            ProductViewModel productViewModel = new ProductViewModel
-            {
-                Name = "",
-                Price = "",
-                Stock = "",
-                Description = "DescriptionTest’",
-                Details = "DétailsTest"
-            };
-
-
-            ///Act
-            productController.Create(productViewModel);
-
-
-            ///Assert
-            Assert.True(productController.ModelState.Count == 3);
-            Assert.True(productController.ModelState.ContainsKey("MissingName"));
-            Assert.True(productController.ModelState.ContainsKey("MissingPrice"));
-            Assert.True(productController.ModelState.ContainsKey("MissingStock"));
-
-        }
-
-        [Fact]
-
-        public void CheckProductControllerModelStateReturnsPriceNotANumberStockNotAnIntegerPriceNotGreaterThanZeroStockNotGreaterThanZero()
-        {
-            /// Arrange
-
-            /// <summary>
-            /// In this case we will test product controller's modelstate
-            /// We instanciate interfaces to avoid using moq with the controller
-            /// </summary >
-            ICart cart = new Cart();
-            IProductRepository productRepository = new ProductRepository(Context);
-            IOrderRepository orderRepository = new OrderRepository(Context);
-            ILanguageService languageService = new LanguageService();
-
-
-            /// <summary>
-            /// Creating new services to simulate localizer
-            /// as there is no Interface ILocalizer.
-            /// </summary >
-            var service = new ServiceCollection();
-            service.AddLogging();
-            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
-            var serviceProvider = service.BuildServiceProvider();
-
-            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
-
-            /// <summary>
-            /// Create a new ProductService to instanciate the productController
-            /// </summary >
-            IProductService productService = new ProductService(cart, productRepository, orderRepository, localizer);
-
-            /// <summary>
-            /// Create a new ProductController
-            /// </summary>
-
-            ProductController productController = new ProductController(productService, languageService);
-
-            /// <summary>
-            /// Creating our two test productViewModels.
-            /// Both are correctly filled up.
-            /// </summary >
-            ProductViewModel productViewModel = new ProductViewModel
-            {
-                Name = "ProductName",
-                Price = "wrongpricetest",
-                Stock = "wrongstocktest",
-                Description = "DescriptionTest’",
-                Details = "DétailsTest"
-            };
-
-
-            ///Act
-            productController.Create(productViewModel);
-
-
-            ///Assert
-            Assert.True(productController.ModelState.Count == 4);
-            Assert.True(productController.ModelState.ContainsKey("PriceNotANumber"));
-            Assert.True(productController.ModelState.ContainsKey("StockNotAnInteger"));
-            Assert.True(productController.ModelState.ContainsKey("PriceNotGreaterThanZero"));
-            Assert.True(productController.ModelState.ContainsKey("StockNotGreaterThanZero"));
-        }
-
-
-        [Fact]
-
-        public void CheckProductViewModelReturnsPriceNotANumberStockNotAnIntegerPriceNotGreaterThanZeroStockNotGreaterThanZero()
-        {
-            /// Arrange
-
-            /// <summary>
-            /// In this case we will test product controller's modelstate
-            /// We instanciate interfaces to avoid using moq with the controller
-            /// </summary >
-            ICart cart = new Cart();
-            IProductRepository productRepository = new ProductRepository(Context);
-            IOrderRepository orderRepository = new OrderRepository(Context);
-            ILanguageService languageService = new LanguageService();
-
-
-            /// <summary>
-            /// Creating new services to simulate localizer
-            /// as there is no Interface ILocalizer.
-            /// </summary >
-            var service = new ServiceCollection();
-            service.AddLogging();
-            service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
-            var serviceProvider = service.BuildServiceProvider();
-
-            var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
-
-            /// <summary>
-            /// Create a new ProductService to instanciate the productController
-            /// </summary >
-            IProductService productService = new ProductService(cart, productRepository, orderRepository, localizer);
-
-            /// <summary>
-            /// Create a new ProductController
-            /// </summary>
-
-            ProductController productController = new ProductController(productService, languageService);
-
-
-            ///Act
-            /// <summary>
-            /// Creating our two test productViewModels.
-            /// Both are correctly filled up.
-            /// </summary >
-            ProductViewModel productViewModel = new ProductViewModel
-            {
-                Name = "ProductName",
-                Price = "wrongpricetest",
-                Stock = "wrongstocktest",
-                Description = "DescriptionTest’",
-                Details = "DétailsTest"
-            };
-
-            ///Assert
-            Assert.True(productController.ModelState.Count == 4);
-            Assert.True(productController.ModelState.ContainsKey("PriceNotANumber"));
-            Assert.True(productController.ModelState.ContainsKey("StockNotAnInteger"));
-            Assert.True(productController.ModelState.ContainsKey("PriceNotGreaterThanZero"));
-            Assert.True(productController.ModelState.ContainsKey("StockNotGreaterThanZero"));
-        }
-
-
-        [Fact]
-
-        public void CheckProductViewModelReturnsMissingNameMissingPriceMissingStock()
-        {
-            /// Arrange
-
-
-            ProductViewModel productViewModel = new ProductViewModel();
-
-            var context = new ValidationContext(productViewModel);
-            var modelErrors = new List<ValidationResult>();
-
-            var culture = Thread.CurrentThread.CurrentCulture;
-            var UIculture = Thread.CurrentThread.CurrentUICulture;
-
-
-            try
-            { 
-                /// Use of a try block to force the culture to get to English
-                /// In debogger mode culture and UIculture will stay at their previous state
-                /// This test works only if the error message exists in English
-                /// Otherwise we would create custom attributes to get in this test the key MissingField, FieldNot...
-                Thread.CurrentThread.CurrentCulture = new CultureInfo("en-En");
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-En");
-
-                /// Act
-                productViewModel.Name = "";
-                productViewModel.Price = "10";
-                productViewModel.Stock = "10";
-                productViewModel.Description = "DescriptionTest’";
-                productViewModel.Details = "DétailsTest";
-
-                bool isProductViewModelValid = Validator.TryValidateObject(productViewModel, context, modelErrors, true);
-
-                /// Assert
-                Assert.True(modelErrors.Count==1);    
-                Assert.Contains(modelErrors, vr => vr.ErrorMessage.Contains(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources.MissingName));
             }
 
-            finally
+
+
+
+            [Fact]
+            public void CheckProductModelErrors_ShouldReturn_MissingPrice()
             {
-                /// Use of a finally block to get the ulture back to their previous states
-                Thread.CurrentThread.CurrentCulture = culture;
-                Thread.CurrentThread.CurrentUICulture = UIculture;
+                /// Arrange
+
+                /// <summary>
+                /// Use of Moq to replicate I(Name)Service.
+                /// No need to buildup dependances like intermediary Interfaces or even SQL.
+                /// </summary >
+
+                var mockedICart = new Mock<ICart>();
+                var mockedIProductRepository = new Mock<IProductRepository>();
+                var mockedIOrderRepository = new Mock<IOrderRepository>();
+                var mockedILanguageService = new Mock<ILanguageService>();
+
+
+
+                /// <summary>
+                /// Creating new services to simulate localizer
+                /// as there is no Interface ILocalizer.
+                /// </summary >
+                var service = new ServiceCollection();
+                service.AddLogging();
+                service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+                var serviceProvider = service.BuildServiceProvider();
+
+                var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+                /// <summary>
+                /// Here we call the real base functions as the tests have been created after the programme.
+                /// We can mock virtual Interfaces to use the constructor.
+                /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
+                /// 
+                /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
+                /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
+                /// 
+                /// Possible solution but it adds a new independent class to be called :
+                /// 
+                ///     mockedProductService.Setup(s => s.CheckProductModelErrors(It.IsAny<ProductViewModel>()))
+                ///     .Returns((ProductViewModel pvm) =>
+                ///     {
+                ///     var testErrorDictionnary = new Dictionary<string, string>();
+                ///     testErrorDictionnary = HelperClass.CheckProductModelErrorsHelper(pvm);
+                ///     return testErrorDictionnary;
+                ///     });
+                /// 
+                /// Otherwise we would have to create a new independent class containing the logic via a helper in it.
+
+
+                var mockedProductService = new Mock<ProductService>(mockedICart.Object, mockedIProductRepository.Object, mockedIOrderRepository.Object, localizer) { CallBase = true };
+
+
+                /// <summary>
+                /// Creating our two test productViewModels.
+                /// Both are correctly filled up.
+                /// </summary >
+                ProductViewModel productViewModel = new ProductViewModel
+                {
+                    Name = "Name",
+                    Price = "",
+                    Stock = "10",
+                    Description = "DescriptionTest’",
+                    Details = "DétailsTest"
+                };
+
+                ///// <summary>
+                ///// Creating a temporary dictionnary to store results
+                ///// </summary >       
+                Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
+
+                ///Act
+                errorTempDictionary = mockedProductService.Object.CheckProductModelErrors(productViewModel);
+
+                ///Assert
+                Assert.True(errorTempDictionary.Count == 1);
+                Assert.True(errorTempDictionary.ContainsKey("MissingPrice"));
+            }
+
+
+
+            [Fact]
+            public void CheckProductModelErrors_ShouldReturn_MissingStock()
+            {
+                /// Arrange
+
+                /// <summary>
+                /// Use of Moq to replicate I(Name)Service.
+                /// No need to buildup dependances like intermediary Interfaces or even SQL.
+                /// </summary >
+
+                var mockedICart = new Mock<ICart>();
+                var mockedIProductRepository = new Mock<IProductRepository>();
+                var mockedIOrderRepository = new Mock<IOrderRepository>();
+                var mockedILanguageService = new Mock<ILanguageService>();
+
+
+
+                /// <summary>
+                /// Creating new services to simulate localizer
+                /// as there is no Interface ILocalizer.
+                /// </summary >
+                var service = new ServiceCollection();
+                service.AddLogging();
+                service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+                var serviceProvider = service.BuildServiceProvider();
+
+                var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+                /// <summary>
+                /// Here we call the real base functions as the tests have been created after the programme.
+                /// We can mock virtual Interfaces to use the constructor.
+                /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
+                /// 
+                /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
+                /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
+                /// 
+                /// Possible solution but it adds a new independent class to be called :
+                /// 
+                ///     mockedProductService.Setup(s => s.CheckProductModelErrors(It.IsAny<ProductViewModel>()))
+                ///     .Returns((ProductViewModel pvm) =>
+                ///     {
+                ///     var testErrorDictionnary = new Dictionary<string, string>();
+                ///     testErrorDictionnary = HelperClass.CheckProductModelErrorsHelper(pvm);
+                ///     return testErrorDictionnary;
+                ///     });
+                /// 
+                /// Otherwise we would have to create a new independent class containing the logic via a helper in it.
+
+
+                var mockedProductService = new Mock<ProductService>(mockedICart.Object, mockedIProductRepository.Object, mockedIOrderRepository.Object, localizer) { CallBase = true };
+
+
+                /// <summary>
+                /// Creating our two test productViewModels.
+                /// Both are correctly filled up.
+                /// </summary >
+                ProductViewModel productViewModel = new ProductViewModel
+                {
+                    Name = "Name",
+                    Price = "10",
+                    Stock = "",
+                    Description = "DescriptionTest’",
+                    Details = "DétailsTest"
+                };
+
+                ///// <summary>
+                ///// Creating a temporary dictionnary to store results
+                ///// </summary >
+                Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
+
+                ///Act
+                errorTempDictionary = mockedProductService.Object.CheckProductModelErrors(productViewModel);
+
+                ///Assert
+                Assert.True(errorTempDictionary.Count == 1);
+                Assert.True(errorTempDictionary.ContainsKey("MissingStock"));
+            }
+
+
+            [Fact]
+            public void CheckProductModelErrors_ShouldReturn_PriceNotANumber_AndPriceNotGreaterThanZero()
+            {
+                /// Arrange
+
+                /// <summary>
+                /// Use of Moq to replicate I(Name)Service.
+                /// No need to buildup dependances like intermediary Interfaces or even SQL.
+                /// </summary >
+
+                var mockedICart = new Mock<ICart>();
+                var mockedIProductRepository = new Mock<IProductRepository>();
+                var mockedIOrderRepository = new Mock<IOrderRepository>();
+                var mockedILanguageService = new Mock<ILanguageService>();
+
+
+
+                /// <summary>
+                /// Creating new services to simulate localizer
+                /// as there is no Interface ILocalizer.
+                /// </summary >
+                var service = new ServiceCollection();
+                service.AddLogging();
+                service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+                var serviceProvider = service.BuildServiceProvider();
+
+                var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+                /// <summary>
+                /// Here we call the real base functions as the tests have been created after the programme.
+                /// We can mock virtual Interfaces to use the constructor.
+                /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
+                /// 
+                /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
+                /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
+                /// 
+                /// Possible solution but it adds a new independent class to be called :
+                /// 
+                ///     mockedProductService.Setup(s => s.CheckProductModelErrors(It.IsAny<ProductViewModel>()))
+                ///     .Returns((ProductViewModel pvm) =>
+                ///     {
+                ///     var testErrorDictionnary = new Dictionary<string, string>();
+                ///     testErrorDictionnary = HelperClass.CheckProductModelErrorsHelper(pvm);
+                ///     return testErrorDictionnary;
+                ///     });
+                /// 
+                /// Otherwise we would have to create a new independent class containing the logic via a helper in it.
+
+
+                var mockedProductService = new Mock<ProductService>(mockedICart.Object, mockedIProductRepository.Object, mockedIOrderRepository.Object, localizer) { CallBase = true };
+
+
+                /// <summary>
+                /// Creating our two test productViewModels.
+                /// Both are correctly filled up.
+                /// </summary >
+                ProductViewModel productViewModel = new ProductViewModel
+                {
+                    Name = "Name",
+                    Price = "price-+=",
+                    Stock = "10",
+                    Description = "DescriptionTest’",
+                    Details = "DétailsTest"
+                };
+
+                ///// <summary>
+                ///// Creating a temporary dictionnary to store results
+                ///// </summary >
+                Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
+
+                ///Act
+                errorTempDictionary = mockedProductService.Object.CheckProductModelErrors(productViewModel);
+
+                ///Assert
+                Assert.True(errorTempDictionary.Count == 2);
+                Assert.True(errorTempDictionary.ContainsKey("PriceNotANumber"));
+                Assert.True(errorTempDictionary.ContainsKey("PriceNotGreaterThanZero"));
+            }
+
+
+            [Fact]
+            public void CheckProductModelErrors_ShouldReturn_PriceNotGreaterThanZero()
+            {
+                /// Arrange
+
+                /// <summary>
+                /// Use of Moq to replicate I(Name)Service.
+                /// No need to buildup dependances like intermediary Interfaces or even SQL.
+                /// </summary >
+
+                var mockedICart = new Mock<ICart>();
+                var mockedIProductRepository = new Mock<IProductRepository>();
+                var mockedIOrderRepository = new Mock<IOrderRepository>();
+                var mockedILanguageService = new Mock<ILanguageService>();
+
+
+
+                /// <summary>
+                /// Creating new services to simulate localizer
+                /// as there is no Interface ILocalizer.
+                /// </summary >
+                var service = new ServiceCollection();
+                service.AddLogging();
+                service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+                var serviceProvider = service.BuildServiceProvider();
+
+                var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+                /// <summary>
+                /// Here we call the real base functions as the tests have been created after the programme.
+                /// We can mock virtual Interfaces to use the constructor.
+                /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
+                /// 
+                /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
+                /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
+                /// 
+                /// Possible solution but it adds a new independent class to be called :
+                /// 
+                ///     mockedProductService.Setup(s => s.CheckProductModelErrors(It.IsAny<ProductViewModel>()))
+                ///     .Returns((ProductViewModel pvm) =>
+                ///     {
+                ///     var testErrorDictionnary = new Dictionary<string, string>();
+                ///     testErrorDictionnary = HelperClass.CheckProductModelErrorsHelper(pvm);
+                ///     return testErrorDictionnary;
+                ///     });
+                /// 
+                /// Otherwise we would have to create a new independent class containing the logic via a helper in it.
+
+
+                var mockedProductService = new Mock<ProductService>(mockedICart.Object, mockedIProductRepository.Object, mockedIOrderRepository.Object, localizer) { CallBase = true };
+
+
+                /// <summary>
+                /// Creating our two test productViewModels.
+                /// Both are correctly filled up.
+                /// </summary >
+                ProductViewModel productViewModel = new ProductViewModel
+                {
+                    Name = "Name",
+                    Price = "-10",
+                    Stock = "10",
+                    Description = "DescriptionTest’",
+                    Details = "DétailsTest"
+                };
+
+                ///// <summary>
+                ///// Creating a temporary dictionnary to store results
+                ///// </summary >
+                Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
+
+                ///Act
+                errorTempDictionary = mockedProductService.Object.CheckProductModelErrors(productViewModel);
+
+                ///Assert
+                Assert.True(errorTempDictionary.Count == 1);
+                Assert.True(errorTempDictionary.ContainsKey("PriceNotGreaterThanZero"));
+            }
+
+            [Fact]
+            public void CheckProductModelErrors_ShouldReturn_StockNotGreaterThan0_StockNotAnInteger()
+            {
+                /// Arrange
+
+                /// <summary>
+                /// Use of Moq to replicate I(Name)Service.
+                /// No need to buildup dependances like intermediary Interfaces or even SQL.
+                /// </summary >
+
+                var mockedICart = new Mock<ICart>();
+                var mockedIProductRepository = new Mock<IProductRepository>();
+                var mockedIOrderRepository = new Mock<IOrderRepository>();
+                var mockedILanguageService = new Mock<ILanguageService>();
+
+
+
+                /// <summary>
+                /// Creating new services to simulate localizer
+                /// as there is no Interface ILocalizer.
+                /// </summary >
+                var service = new ServiceCollection();
+                service.AddLogging();
+                service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+                var serviceProvider = service.BuildServiceProvider();
+
+                var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+                /// <summary>
+                /// Here we call the real base functions as the tests have been created after the programme.
+                /// We can mock virtual Interfaces to use the constructor.
+                /// localizer is created in the test via ServiceCollection as an alternative to ILocalizer.
+                /// 
+                /// If we used mockedIProductService we would copy/paste the whole logic of CheckProductModelErrors.
+                /// The issue is : when we modifiy something into the real function, we should change it in every test as well.
+                /// 
+                /// Possible solution but it adds a new independent class to be called :
+                /// 
+                ///     mockedProductService.Setup(s => s.CheckProductModelErrors(It.IsAny<ProductViewModel>()))
+                ///     .Returns((ProductViewModel pvm) =>
+                ///     {
+                ///     var testErrorDictionnary = new Dictionary<string, string>();
+                ///     testErrorDictionnary = HelperClass.CheckProductModelErrorsHelper(pvm);
+                ///     return testErrorDictionnary;
+                ///     });
+                /// 
+                /// Otherwise we would have to create a new independent class containing the logic via a helper in it.
+
+
+                var mockedProductService = new Mock<ProductService>(mockedICart.Object, mockedIProductRepository.Object, mockedIOrderRepository.Object, localizer) { CallBase = true };
+
+
+                /// <summary>
+                /// Creating our two test productViewModels.
+                /// Both are correctly filled up.
+                /// </summary >
+                ProductViewModel productViewModel = new ProductViewModel
+                {
+                    Name = "Name",
+                    Price = "10",
+                    Stock = "-0.3",
+                    Description = "DescriptionTest’",
+                    Details = "DétailsTest"
+                };
+
+                ///// <summary>
+                ///// Creating a temporary dictionnary to store results
+                ///// </summary >
+                Dictionary<string, string> errorTempDictionary = new Dictionary<string, string>();
+
+                ///Act
+                errorTempDictionary = mockedProductService.Object.CheckProductModelErrors(productViewModel);
+
+                ///Assert
+                Assert.True(errorTempDictionary.Count == 2);
+                Assert.True(errorTempDictionary.ContainsKey("StockNotGreaterThanZero"));
+                Assert.True(errorTempDictionary.ContainsKey("StockNotAnInteger"));
+            }
+
+
+
+
+
+
+
+
+            /// <summary>
+            /// Unit tests of the ModelState given by ProductController's action
+            /// With real Interfaces
+            /// </summary>
+
+
+            [Fact]
+            public void CheckProductControllerModelState_ShouldReturn_MissingName_MissingPrice_MissingStock()
+            {
+                /// Arrange
+
+                /// <summary>
+                /// In this case we will test product controller's modelstate
+                /// We instanciate interfaces to avoid using moq with the controller
+                /// </summary >
+                ICart cart = new Cart();
+                IProductRepository productRepository = new ProductRepository(Context);
+                IOrderRepository orderRepository = new OrderRepository(Context);
+                ILanguageService languageService = new LanguageService();
+
+
+                /// <summary>
+                /// Creating new services to simulate localizer
+                /// as there is no Interface ILocalizer.
+                /// </summary >
+                var service = new ServiceCollection();
+                service.AddLogging();
+                service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+                var serviceProvider = service.BuildServiceProvider();
+
+                var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+                /// <summary>
+                /// Create a new ProductService to instanciate the productController
+                /// </summary >
+                IProductService productService = new ProductService(cart, productRepository, orderRepository, localizer);
+
+                /// <summary>
+                /// Create a new ProductController
+                /// </summary>
+
+                ProductController productController = new ProductController(productService, languageService);
+
+                /// <summary>
+                /// Creating our two test productViewModels.
+                /// Both are correctly filled up.
+                /// </summary >
+                ProductViewModel productViewModel = new ProductViewModel
+                {
+                    Name = "",
+                    Price = "",
+                    Stock = "",
+                    Description = "DescriptionTest’",
+                    Details = "DétailsTest"
+                };
+
+
+                ///Act
+                productController.Create(productViewModel);
+
+
+                ///Assert
+                Assert.True(productController.ModelState.Count == 3);
+                Assert.True(productController.ModelState.ContainsKey("MissingName"));
+                Assert.True(productController.ModelState.ContainsKey("MissingPrice"));
+                Assert.True(productController.ModelState.ContainsKey("MissingStock"));
+
+            }
+
+            [Fact]
+            public void CheckProductControllerModelState_ShoudReturn_PriceNotANumber_StockNotAnInteger_PriceNotGreaterThanZero_StockNotGreaterThanZero()
+            {
+                /// Arrange
+
+                /// <summary>
+                /// In this case we will test product controller's modelstate
+                /// We instanciate interfaces to avoid using moq with the controller
+                /// </summary >
+                ICart cart = new Cart();
+                IProductRepository productRepository = new ProductRepository(Context);
+                IOrderRepository orderRepository = new OrderRepository(Context);
+                ILanguageService languageService = new LanguageService();
+
+
+                /// <summary>
+                /// Creating new services to simulate localizer
+                /// as there is no Interface ILocalizer.
+                /// </summary >
+                var service = new ServiceCollection();
+                service.AddLogging();
+                service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+                var serviceProvider = service.BuildServiceProvider();
+
+                var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+                /// <summary>
+                /// Create a new ProductService to instanciate the productController
+                /// </summary >
+                IProductService productService = new ProductService(cart, productRepository, orderRepository, localizer);
+
+                /// <summary>
+                /// Create a new ProductController
+                /// </summary>
+
+                ProductController productController = new ProductController(productService, languageService);
+
+                /// <summary>
+                /// Creating our two test productViewModels.
+                /// Both are correctly filled up.
+                /// </summary >
+                ProductViewModel productViewModel = new ProductViewModel
+                {
+                    Name = "ProductName",
+                    Price = "wrongpricetest",
+                    Stock = "wrongstocktest",
+                    Description = "DescriptionTest’",
+                    Details = "DétailsTest"
+                };
+
+
+                ///Act
+                productController.Create(productViewModel);
+
+
+                ///Assert
+                Assert.True(productController.ModelState.Count == 4);
+                Assert.True(productController.ModelState.ContainsKey("PriceNotANumber"));
+                Assert.True(productController.ModelState.ContainsKey("StockNotAnInteger"));
+                Assert.True(productController.ModelState.ContainsKey("PriceNotGreaterThanZero"));
+                Assert.True(productController.ModelState.ContainsKey("StockNotGreaterThanZero"));
+            }
+
+
+
+            /// <Summary>
+            /// ProductViewModel unit tests
+            /// <Summary>
+
+
+            [Fact]
+            public void CheckProductViewModel_ShouldReturn_MissingName_MissingPrice_MissingStock()
+            {
+                /// Arrange
+
+                /// <Summary>
+                /// Create a ProductViewModel.
+                /// Retrieve the validation attributes via context.
+                /// Create a temporary errors list to store error messages.
+                /// Get current culture and current UI culture so that the assert part 
+                /// will compare the error message in english culture.
+                /// In this type of test the error key like MissingName is not stored.
+                /// 
+                /// CheckProductModelErrors is helpful for that but here we do not use it.
+                /// It helps making tests without any translated messages.
+                /// 
+                /// 
+                /// </Summary>
+                ProductViewModel productViewModel = new ProductViewModel();
+
+                var context = new ValidationContext(productViewModel);
+                var productViewModelErrors = new List<ValidationResult>();
+
+                var culture = Thread.CurrentThread.CurrentCulture;
+                var UIculture = Thread.CurrentThread.CurrentUICulture;
+
+
+                try
+                {
+                    /// <Summary>
+                    /// Use of a try block to force the culture to get to English
+                    /// In debogger mode culture and UIculture will stay at their previous state
+                    /// This test works only if the error message exists in English
+                    /// Otherwise we would create custom attributes to get in this test the key MissingField, FieldNot...
+                    /// </Summary>
+                    Thread.CurrentThread.CurrentCulture = new CultureInfo("en-En");
+                    Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-En");
+
+                    /// Act
+                    productViewModel.Name = "";
+                    productViewModel.Price = "";
+                    productViewModel.Stock = "";
+                    productViewModel.Description = "DescriptionTest’";
+                    productViewModel.Details = "DétailsTest";
+
+                    bool isProductViewModelValid = Validator.TryValidateObject(productViewModel, context, productViewModelErrors, true);
+
+                    /// Assert
+                    Assert.True(productViewModelErrors.Count == 3);
+                    Assert.Contains(productViewModelErrors, vr => vr.ErrorMessage.Contains(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources.MissingName));
+                    Assert.Contains(productViewModelErrors, vr => vr.ErrorMessage.Contains(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources.MissingPrice));
+                    Assert.Contains(productViewModelErrors, vr => vr.ErrorMessage.Contains(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources.MissingStock));
+
+                }
+
+                finally
+                {
+                    ///<Summary>
+                    /// Use of a finally block to get the ulture back to their previous states
+                    /// </Summary>
+                    Thread.CurrentThread.CurrentCulture = culture;
+                    Thread.CurrentThread.CurrentUICulture = UIculture;
+                }
+            }
+
+
+
+
+
+
+            [Fact]
+            public void CheckProductViewModel_ShouldReturn_PriceNotANumber_StockNotAnInteger_PriceNotGreaterThanZero_StockNotGreaterThanZero()
+            {
+                /// Arrange
+
+                /// <Summary>
+                /// Create a ProductViewModel.
+                /// Retrieve the validation attributes via context.
+                /// Create a temporary errors list to store error messages.
+                /// Get current culture and current UI culture so that the assert part 
+                /// will compare the error message in english culture.
+                /// In this type of test the error key like MissingName is not stored.
+                /// 
+                /// CheckProductModelErrors is helpful for that but here we do not use it.
+                /// It helps making tests without any translated messages.
+                /// 
+                /// 
+                /// </Summary>
+                ProductViewModel productViewModel = new ProductViewModel();
+
+                var context = new ValidationContext(productViewModel);
+                var productViewModelErrors = new List<ValidationResult>();
+
+                var culture = Thread.CurrentThread.CurrentCulture;
+                var UIculture = Thread.CurrentThread.CurrentUICulture;
+
+
+                try
+                {
+                    /// <Summary>
+                    /// Use of a try block to force the culture to get to English
+                    /// In debogger mode culture and UIculture will stay at their previous state
+                    /// This test works only if the error message exists in English
+                    /// Otherwise we would create custom attributes to get in this test the key MissingField, FieldNot...
+                    /// </Summary>
+                    Thread.CurrentThread.CurrentCulture = new CultureInfo("en-En");
+                    Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-En");
+
+                    /// Act
+                    productViewModel.Name = "Nametest";
+                    productViewModel.Price = "pricetest";
+                    productViewModel.Stock = "stocktest";
+                    productViewModel.Description = "DescriptionTest’";
+                    productViewModel.Details = "DétailsTest";
+
+                    bool isProductViewModelValid = Validator.TryValidateObject(productViewModel, context, productViewModelErrors, true);
+
+                    /// Assert
+                    Assert.True(productViewModelErrors.Count == 4);
+                    Assert.Contains(productViewModelErrors, vr => vr.ErrorMessage.Contains(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources.PriceNotANumber));
+                    Assert.Contains(productViewModelErrors, vr => vr.ErrorMessage.Contains(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources.PriceNotGreaterThanZero));
+                    Assert.Contains(productViewModelErrors, vr => vr.ErrorMessage.Contains(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources.StockNotAnInteger));
+                    Assert.Contains(productViewModelErrors, vr => vr.ErrorMessage.Contains(P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources.StockNotGreaterThanZero));
+
+
+                }
+
+                finally
+                {
+                    ///<Summary>
+                    /// Use of a finally block to get the ulture back to their previous states
+                    /// </Summary>
+                    Thread.CurrentThread.CurrentCulture = culture;
+                    Thread.CurrentThread.CurrentUICulture = UIculture;
+                }
             }
         }
+    }
 
 
-
-
-        //[Fact]
-
-        //public void CheckProductControllerCreateAdds1ProductToSqlDatabase()
-        //{
-
-        //}
-
-        //[Fact]
-
-        //public void CheckProductControllerDeleteRemoves1ProductFromSqlDatabase()
-        //{
-
-        //}
-
-
-
-
-
-
+        public class Integrationtests : DatabaseFixture
+        {
 
         [Fact]
-        public void Test1()
+        public void CheckProductControllerCreate_Adds1Product_To_SqlDatabase()
         {
             // Arrange
             /// <summary>
@@ -908,7 +924,6 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             IProductRepository productRepository = new ProductRepository(Context);
             IOrderRepository orderRepository = new OrderRepository(Context);
             ILanguageService languageService = new LanguageService();
-            
 
             /// <summary>
             /// Creating new services to simulate localizer.
@@ -927,47 +942,40 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             IProductService productService = new P3AddNewFunctionalityDotNetCore.Models.Services.ProductService(cart, productRepository, orderRepository, localizer);
 
 
-
-
-            // Arrange
             /// <summary>
             /// Simulate user product creation by filling fields.
             /// </summary >
             ProductViewModel productViewModel = new ProductViewModel
             {
-                Name = "",
-                Price = "1",
-                Stock = "1",
-                Description = "DescriptionTest1’",
-                Details = "DetailsTest1"
+                Name = "ProductTest16",
+                Price = "16",
+                Stock = "16",
+                Description = "DescriptionTest16’",
+                Details = "DetailsTest16"
             };
 
-            /// <summary>
-            /// Access to the ProductController.
-            /// </summary >
-            ProductController productController = new ProductController(productService,languageService);
+            var productController = new ProductController(productService, languageService);
 
-                    /// TOREMOVE <summary>
-                    /// Access the private static ProductService.MapToProductEntity() function.
-                    /// </summary >
-                    //var accessProductMapper = typeof(ProductService).GetField("MapToProductEntity", BindingFlags.NonPublic | BindingFlags.Static);
+            var cartController = new CartController(cart, productService);
 
 
-            // Act Product creation
 
-            //productService.SaveProduct(productViewModel);
+            // Act Product creation 
             productController.Create(productViewModel);
             int productIdFound = productService.GetAllProducts().Select(p => p.Id).Max();
+            var productFound = productService.GetProductById(productIdFound);
+
 
             // Assert
-            Assert.True(productController.ModelState.Count == 1);
-            Assert.Contains("MissingName", productController.ModelState);
+            Assert.True(productService.GetAllProducts().Select(p => p.Id).Max() == productIdFound);
+            Assert.True(productFound.Name == productViewModel.Name);
         }
 
 
         [Fact]
-        public void CheckProductModelErrorsShouldReturnMissingName2()
+        public void CheckProductControllerDelete_Removes1Product_From_SqlDatabase()
         {
+
             // Arrange
             /// <summary>
             /// Creating new services linked with Sql Context.
@@ -976,7 +984,6 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             IProductRepository productRepository = new ProductRepository(Context);
             IOrderRepository orderRepository = new OrderRepository(Context);
             ILanguageService languageService = new LanguageService();
-
 
             /// <summary>
             /// Creating new services to simulate localizer.
@@ -995,48 +1002,252 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             IProductService productService = new P3AddNewFunctionalityDotNetCore.Models.Services.ProductService(cart, productRepository, orderRepository, localizer);
 
 
-
-
-            // Arrange
             /// <summary>
             /// Simulate user product creation by filling fields.
             /// </summary >
             ProductViewModel productViewModel = new ProductViewModel
             {
-                Name = "",
-                Price = "",
-                Stock = "",
-                Description = "DescriptionTest1’",
-                Details = "DetailsTest1"
+                Name = "ProductTest16",
+                Price = "16",
+                Stock = "16",
+                Description = "DescriptionTest16’",
+                Details = "DetailsTest16"
             };
 
-            /// <summary>
-            /// Access to the ProductController.
-            /// </summary >
-            ProductController productController = new ProductController(productService, languageService);
+            var productController = new ProductController(productService, languageService);
 
-            /// <summary>
-            /// Access the private static ProductService.MapToProductEntity() function.
-            /// </summary >
-            var accessProductMapper = typeof(ProductService).GetField("MapToProductEntity", BindingFlags.NonPublic | BindingFlags.Static);
+            var cartController = new CartController(cart, productService);
 
 
-            // Act Product creation
 
-            //productService.SaveProduct(productViewModel);
+            // Act Product creation 
             productController.Create(productViewModel);
             int productIdFound = productService.GetAllProducts().Select(p => p.Id).Max();
+            var productFound = productService.GetProductById(productIdFound);
+
 
             // Assert
-            Assert.True(productController.ModelState.Count == 3);
-            Assert.Contains("MissingName", productController.ModelState);
-            Assert.Contains("MissingStock", productController.ModelState);
-            Assert.Contains("MissingPrice", productController.ModelState);
+            Assert.True(productService.GetAllProducts().Select(p => p.Id).Max() == productIdFound);
+            Assert.True(productFound.Name == productViewModel.Name);
 
+
+            // Act Product deletion
+            productService.DeleteProduct(productIdFound);
+
+
+            //Assert
+            Assert.False(productService.GetAllProducts().Select(p => p.Id).Max() == productIdFound);
         }
 
+
+
+            //[Fact]
+            //public void Test1()
+            //{
+            //    // Arrange
+            //    /// <summary>
+            //    /// Creating new services linked with Sql Context.
+            //    /// </summary >
+            //    ICart cart = new Cart();
+            //    IProductRepository productRepository = new ProductRepository(Context);
+            //    IOrderRepository orderRepository = new OrderRepository(Context);
+            //    ILanguageService languageService = new LanguageService();
+            
+
+            //    /// <summary>
+            //    /// Creating new services to simulate localizer.
+            //    /// </summary >
+            //    var service = new ServiceCollection();
+            //    service.AddLogging();
+            //    service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+            //    var serviceProvider = service.BuildServiceProvider();
+
+            //    var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+
+            //    /// <summary>
+            //    /// Creating a complete ÎproductService.
+            //    /// </summary >
+            //    IProductService productService = new P3AddNewFunctionalityDotNetCore.Models.Services.ProductService(cart, productRepository, orderRepository, localizer);
+
+
+
+
+            //    // Arrange
+            //    /// <summary>
+            //    /// Simulate user product creation by filling fields.
+            //    /// </summary >
+            //    ProductViewModel productViewModel = new ProductViewModel
+            //    {
+            //        Name = "",
+            //        Price = "1",
+            //        Stock = "1",
+            //        Description = "DescriptionTest1’",
+            //        Details = "DetailsTest1"
+            //    };
+
+            //    /// <summary>
+            //    /// Access to the ProductController.
+            //    /// </summary >
+            //    ProductController productController = new ProductController(productService,languageService);
+
+
+            //    // Act Product creation
+
+            //    //productService.SaveProduct(productViewModel);
+            //    productController.Create(productViewModel);
+            //    int productIdFound = productService.GetAllProducts().Select(p => p.Id).Max();
+
+            //    // Assert
+            //    Assert.True(productController.ModelState.Count == 1);
+            //    Assert.Contains("MissingName", productController.ModelState);
+            //}
+
+
+            //[Fact]
+            //public void CheckProductModelErrorsShouldReturnMissingName2()
+            //{
+            //    // Arrange
+            //    /// <summary>
+            //    /// Creating new services linked with Sql Context.
+            //    /// </summary >
+            //    ICart cart = new Cart();
+            //    IProductRepository productRepository = new ProductRepository(Context);
+            //    IOrderRepository orderRepository = new OrderRepository(Context);
+            //    ILanguageService languageService = new LanguageService();
+
+
+            //    /// <summary>
+            //    /// Creating new services to simulate localizer.
+            //    /// </summary >
+            //    var service = new ServiceCollection();
+            //    service.AddLogging();
+            //    service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+            //    var serviceProvider = service.BuildServiceProvider();
+
+            //    var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+
+            //    /// <summary>
+            //    /// Creating a complete ÎproductService.
+            //    /// </summary >
+            //    IProductService productService = new P3AddNewFunctionalityDotNetCore.Models.Services.ProductService(cart, productRepository, orderRepository, localizer);
+
+
+
+
+            //    // Arrange
+            //    /// <summary>
+            //    /// Simulate user product creation by filling fields.
+            //    /// </summary >
+            //    ProductViewModel productViewModel = new ProductViewModel
+            //    {
+            //        Name = "",
+            //        Price = "",
+            //        Stock = "",
+            //        Description = "DescriptionTest1’",
+            //        Details = "DetailsTest1"
+            //    };
+
+            //    /// <summary>
+            //    /// Access to the ProductController.
+            //    /// </summary >
+            //    ProductController productController = new ProductController(productService, languageService);
+
+            //    /// <summary>
+            //    /// Access the private static ProductService.MapToProductEntity() function.
+            //    /// </summary >
+            //    var accessProductMapper = typeof(ProductService).GetField("MapToProductEntity", BindingFlags.NonPublic | BindingFlags.Static);
+
+
+            //    // Act Product creation
+
+            //    //productService.SaveProduct(productViewModel);
+            //    productController.Create(productViewModel);
+            //    int productIdFound = productService.GetAllProducts().Select(p => p.Id).Max();
+
+            //    // Assert
+            //    Assert.True(productController.ModelState.Count == 3);
+            //    Assert.Contains("MissingName", productController.ModelState);
+            //    Assert.Contains("MissingStock", productController.ModelState);
+            //    Assert.Contains("MissingPrice", productController.ModelState);
+
+            //}
+        
+                //[Fact]
+                //public void Test13()
+                //{
+
+                //    /// <summary>
+                //    /// Use of Moq to replicate I(Name)Service.
+                //    /// No need to buildup dependances like intermediary Interfaces or even SQL.
+                //    /// </summary >
+                //    var mockedIProductService = new Mock<IProductService>();
+                //    var mockedILanguageService = new Mock<ILanguageService>();
+
+                //    //var productController = new ProductController(mockedIProductService.Object,mockedILanguageService.Object);
+
+
+
+                //    /// <summary>
+                //    /// Creating minimal Lists to simulate SQL database.
+                //    /// SaveProduct creates and returns ProductViewModel whereas GetAllProducts returns Product.
+                //    /// </summary >
+                //    var productViewModelNoSqlDb = new List<ProductViewModel>();
+                //    var productNoSqlDb = new List<Product>();
+
+
+
+                //    /// <summary>
+                //    /// Use of Moq to Setup the functions we then use and test.
+                //    /// Setup and Callback must be of the same type.
+                //    /// (It.IsAny<ProductViewModel>()) in Moq context 
+                //    /// means the same as (ProductViewModel Product) in regular use context.
+                //    /// </summary >
+                //    mockedIProductService.Setup(s => s.SaveProduct(It.IsAny<ProductViewModel>()))
+                //        .Callback<ProductViewModel>(pvm => productViewModelNoSqlDb.Add(pvm));
+
+                //    mockedIProductService.Setup(s => s.GetAllProducts()).Returns(productNoSqlDb);
+
+
+                //    /// <summary>
+                //    /// Creating our two test productViewModels.
+                //    /// Both are correctly filled up.
+                //    /// </summary >
+                //    ProductViewModel productViewModel13 = new ProductViewModel
+                //    {
+                //        Name = "ProductTest13",
+                //        Price = "-13.13",
+                //        Stock = "-13",
+                //        Description = "DescriptionTest13’",
+                //        Details = "DétailsTest13"
+                //    };
+
+
+                //    /// <summary>
+                //    /// Use of Moq to call the SaveProduct function
+                //    /// </summary >
+                //    mockedIProductService.Object.SaveProduct(productViewModel13);
+
+                //    //productController.Create(productViewModel13);
+
+                //    /// <summary>
+                //    /// Counting the number of productViewModel in the list
+                //    /// </summary >
+                //    int productViewModelNoSqlDbCount = productViewModelNoSqlDb.Count;
+
+                //    ///Assert
+                //    Assert.True(productViewModelNoSqlDbCount == 2);
+                //    //Assert.True(productController.ModelState.ContainsKey("PriceNotGreaterThan0"));
+                //    //Assert.Contains("StockNotGreaterThanZero", mockedIProductService.);
+                //}
+
+
+
+
+
         //[Fact]
-        //public void Test13()
+        //public void Test15()
         //{
 
         //    /// <summary>
@@ -1070,27 +1281,33 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
         //    mockedIProductService.Setup(s => s.GetAllProducts()).Returns(productNoSqlDb);
 
-
         //    /// <summary>
         //    /// Creating our two test productViewModels.
         //    /// Both are correctly filled up.
         //    /// </summary >
-        //    ProductViewModel productViewModel13 = new ProductViewModel
+        //    ProductViewModel productViewModel15a = new ProductViewModel
         //    {
-        //        Name = "ProductTest13",
-        //        Price = "-13.13",
-        //        Stock = "-13",
-        //        Description = "DescriptionTest13’",
-        //        Details = "DétailsTest13"
+        //        Name = "ProductTest15a",
+        //        Price = "15",
+        //        Stock = "15",
+        //        Description = "DescriptionTest15a’",
+        //        Details = "DétailsTest15a"
         //    };
 
+        //    ProductViewModel productViewModel15b = new ProductViewModel
+        //    {
+        //        Name = "ProductTest15b",
+        //        Price = "15",
+        //        Stock = "15",
+        //        Description = "DescriptionTest15b’",
+        //        Details = "DétailsTest15b"
+        //    };
 
         //    /// <summary>
         //    /// Use of Moq to call the SaveProduct function
         //    /// </summary >
-        //    mockedIProductService.Object.SaveProduct(productViewModel13);
-
-        //    //productController.Create(productViewModel13);
+        //    mockedIProductService.Object.SaveProduct(productViewModel15a);
+        //    mockedIProductService.Object.SaveProduct(productViewModel15b);
 
         //    /// <summary>
         //    /// Counting the number of productViewModel in the list
@@ -1099,169 +1316,224 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
         //    ///Assert
         //    Assert.True(productViewModelNoSqlDbCount == 2);
-        //    //Assert.True(productController.ModelState.ContainsKey("PriceNotGreaterThan0"));
-        //    //Assert.Contains("StockNotGreaterThanZero", mockedIProductService.);
+        //    Assert.True(productViewModelNoSqlDb[0].Name == "ProductTest15a");
+        //    Assert.True(productViewModelNoSqlDb[1].Name == "ProductTest15b");
+
         //}
 
+                //[Fact]
+                //public void Test16()
+                //{
+                //    // Arrange
+                //    /// <summary>
+                //    /// Creating new services linked with Sql Context.
+                //    /// </summary >
+                //    ICart cart = new Cart();
+                //    IProductRepository productRepository = new ProductRepository(Context);
+                //    IOrderRepository orderRepository = new OrderRepository(Context);
+                //    ILanguageService languageService = new LanguageService();
+
+                //    /// <summary>
+                //    /// Creating new services to simulate localizer.
+                //    /// </summary >
+                //    var service = new ServiceCollection();
+                //    service.AddLogging();
+                //    service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+                //    var serviceProvider = service.BuildServiceProvider();
+
+                //    var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
+
+
+                //    /// <summary>
+                //    /// Creating a complete ÎproductService.
+                //    /// </summary >
+                //    IProductService productService = new P3AddNewFunctionalityDotNetCore.Models.Services.ProductService(cart, productRepository, orderRepository, localizer);
+
+
+                //    /// <summary>
+                //    /// Simulate user product creation by filling fields.
+                //    /// </summary >
+                //    ProductViewModel productViewModel = new ProductViewModel
+                //    {
+                //        Name = "ProductTest16",
+                //        Price = "16",
+                //        Stock = "16",
+                //        Description = "DescriptionTest16’",
+                //        Details = "DetailsTest16"
+                //    };
+
+                //    var productController = new ProductController(productService, languageService);
+
+                //    var cartController = new CartController(cart, productService);
 
 
 
+                //    // Act Product creation 
+                //    productController.Create(productViewModel);
+                //    int productIdFound = productService.GetAllProducts().Select(p => p.Id).Max();
+                //    var productFound = productService.GetProductById(productIdFound);
 
-        [Fact]
-        public void Test15()
-        {
+                //    cartController.AddToCart(productIdFound);
+                //    cartController.AddToCart(productIdFound);
 
-            /// <summary>
-            /// Use of Moq to replicate I(Name)Service.
-            /// No need to buildup dependances like intermediary Interfaces or even SQL.
-            /// </summary >
-            var mockedIProductService = new Mock<IProductService>();
-            var mockedILanguageService = new Mock<ILanguageService>();
-
-            //var productController = new ProductController(mockedIProductService.Object,mockedILanguageService.Object);
+                //    int cartLineProductIdFoundInCart = cart.GetCartLineByProductId(productFound).Product.Id;
 
 
+                //    // Assert
+                //    Assert.True(productService.GetAllProducts().Select(p => p.Id).Max() == productIdFound);
+                //    Assert.True(productFound.Name == productViewModel.Name);
 
-            /// <summary>
-            /// Creating minimal Lists to simulate SQL database.
-            /// SaveProduct creates and returns ProductViewModel whereas GetAllProducts returns Product.
-            /// </summary >
-            var productViewModelNoSqlDb = new List<ProductViewModel>();
-            var productNoSqlDb = new List<Product>();
+                //    Assert.Equal(productIdFound, cartLineProductIdFoundInCart);
+
+                //    // Act Product deletion
+                //    productService.DeleteProduct(productIdFound);
 
 
-
-            /// <summary>
-            /// Use of Moq to Setup the functions we then use and test.
-            /// Setup and Callback must be of the same type.
-            /// (It.IsAny<ProductViewModel>()) in Moq context 
-            /// means the same as (ProductViewModel Product) in regular use context.
-            /// </summary >
-            mockedIProductService.Setup(s => s.SaveProduct(It.IsAny<ProductViewModel>()))
-                .Callback<ProductViewModel>(pvm => productViewModelNoSqlDb.Add(pvm));
-
-            mockedIProductService.Setup(s => s.GetAllProducts()).Returns(productNoSqlDb);
-
-            /// <summary>
-            /// Creating our two test productViewModels.
-            /// Both are correctly filled up.
-            /// </summary >
-            ProductViewModel productViewModel15a = new ProductViewModel
-            {
-                Name = "ProductTest15a",
-                Price = "15",
-                Stock = "15",
-                Description = "DescriptionTest15a’",
-                Details = "DétailsTest15a"
-            };
-
-            ProductViewModel productViewModel15b = new ProductViewModel
-            {
-                Name = "ProductTest15b",
-                Price = "15",
-                Stock = "15",
-                Description = "DescriptionTest15b’",
-                Details = "DétailsTest15b"
-            };
-
-            /// <summary>
-            /// Use of Moq to call the SaveProduct function
-            /// </summary >
-            mockedIProductService.Object.SaveProduct(productViewModel15a);
-            mockedIProductService.Object.SaveProduct(productViewModel15b);
-
-            /// <summary>
-            /// Counting the number of productViewModel in the list
-            /// </summary >
-            int productViewModelNoSqlDbCount = productViewModelNoSqlDb.Count;
-
-            ///Assert
-            Assert.True(productViewModelNoSqlDbCount == 2);
-            Assert.True(productViewModelNoSqlDb[0].Name == "ProductTest15a");
-            Assert.True(productViewModelNoSqlDb[1].Name == "ProductTest15b");
+                //    //Assert
+                //    Assert.Null(cart.GetCartLineByProductId(productFound).Product);
+                //    Assert.False(productService.GetAllProducts().Select(p => p.Id).Max() == productIdFound);
+                //    Assert.NotEqual(productIdFound, cartLineProductIdFoundInCart);
+                //}
 
         }
 
-        //[Fact]
-        //public void Test16()
-        //{
-        //    // Arrange
-        //    /// <summary>
-        //    /// Creating new services linked with Sql Context.
-        //    /// </summary >
-        //    ICart cart = new Cart();
-        //    IProductRepository productRepository = new ProductRepository(Context);
-        //    IOrderRepository orderRepository = new OrderRepository(Context);
-        //    ILanguageService languageService = new LanguageService();
+        public class EnToEndTests : DatabaseFixture
+        {
+            [Fact]
+            public void CheckProductControllerCreate_Adds1_newProduct_IntoSQL_AndCartControllerAdd_AddsThis_AndProductControllerDelete_RemovesThis_FromSQL_And_Cart()
+            {
+                // Arrange
+                /// <summary>
+                /// Creating new services linked with Sql Context.
+                /// </summary >
+                ICart cart = new Cart();
+                IProductRepository productRepository = new ProductRepository(Context);
+                IOrderRepository orderRepository = new OrderRepository(Context);
+                ILanguageService languageService = new LanguageService();
 
-        //    /// <summary>
-        //    /// Creating new services to simulate localizer.
-        //    /// </summary >
-        //    var service = new ServiceCollection();
-        //    service.AddLogging();
-        //    service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
-        //    var serviceProvider = service.BuildServiceProvider();
+                /// <summary>
+                /// Creating new services to simulate localizer for ProductService.
+                /// </summary >
+                var service = new ServiceCollection();
+                service.AddLogging();
+                service.AddLocalization(options => options.ResourcesPath = "P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources");
+                var serviceProvider = service.BuildServiceProvider();
 
-        //    var localizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
-
-
-        //    /// <summary>
-        //    /// Creating a complete ÎproductService.
-        //    /// </summary >
-        //    IProductService productService = new P3AddNewFunctionalityDotNetCore.Models.Services.ProductService(cart, productRepository, orderRepository, localizer);
+                var localizer = serviceProvider.GetService <IStringLocalizer<P3AddNewFunctionalityDotNetCore.Resources.Models.Services.ProductServiceResources>>();
 
 
-        //    /// <summary>
-        //    /// Simulate user product creation by filling fields.
-        //    /// </summary >
-        //    ProductViewModel productViewModel = new ProductViewModel
-        //    {
-        //        Name = "ProductTest16",
-        //        Price = "16",
-        //        Stock = "16",
-        //        Description = "DescriptionTest16’",
-        //        Details = "DetailsTest16"
-        //    };
+                /// <summary>
+                /// Creating new services to simulate localizer for OrderService.
+                /// </summary >
+                var orderLocalizerService = new ServiceCollection();
+                service.AddLogging();
+                service.AddLocalization(options => options.ResourcesPath = "P3.Resources.Models.Order");
+                var orderServiceProvider = service.BuildServiceProvider();
 
-        //    var productController = new ProductController(productService, languageService);
+                
+                var orderlocalizer = serviceProvider.GetService<IStringLocalizer<P3AddNewFunctionalityDotNetCore.Controllers.OrderController>>();
 
-        //    var cartController = new CartController(cart, productService);
+                /// <summary>
+                /// Creating a complete ÎproductService.
+                /// </summary >
+                IProductService productService = new P3AddNewFunctionalityDotNetCore.Models.Services.ProductService(cart, productRepository, orderRepository, localizer);
 
-        //                        /// <summary>
-        //                        /// TO REMOVE Access the private static ProductService.MapToProductEntity() function.
-        //                        /// </summary >
-        //                        ///var accessProductMapper = typeof(ProductService).GetField("MapToProductEntity", BindingFlags.NonPublic | BindingFlags.Static);
+                IOrderService orderService = new OrderService(cart,orderRepository,productService);
 
 
+                /// <summary>
+                /// Simulate user product creation by filling fields.
+                /// </summary >
+                ProductViewModel productViewModelToDelete = new ProductViewModel
+                {
+                    Name = "NameProductEndToEndTestToDelete",
+                    Price = "20",
+                    Stock = "20",
+                    Description = "DescriptionProductEndToEndTestToDelete’",
+                    Details = "DetailsProductEndToEndTestToDelete"
+                };
 
-        //    // Act Product creation 
-        //    productController.Create(productViewModel);
-        //    int productIdFound = productService.GetAllProducts().Select(p => p.Id).Max();
-        //    var productFound = productService.GetProductById(productIdFound);
+                ProductViewModel productViewModelToKeep = new ProductViewModel
+                {
+                    Name = "NameProductEndToEndTestToKeep",
+                    Price = "10",
+                    Stock = "10",
+                    Description = "DescriptionProductEndToEndTestToKeep’",
+                    Details = "DetailsProductEndToEndTestToKeep"
+                };
 
-        //    cartController.AddToCart(productIdFound);
-        //    cartController.AddToCart(productIdFound);
-
-        //    int cartLineProductIdFoundInCart = cart.GetCartLineByProductId(productFound).Product.Id;
 
 
-        //    // Assert
-        //    Assert.True(productService.GetAllProducts().Select(p => p.Id).Max() == productIdFound);
-        //    Assert.True(productFound.Name == productViewModel.Name);
 
-        //    Assert.Equal(productIdFound, cartLineProductIdFoundInCart);
 
-        //    // Act Product deletion
-        //    productService.DeleteProduct(productIdFound);
-            
+                var productController = new ProductController(productService, languageService);
 
-        //    //Assert
-        //    Assert.Null(cart.GetCartLineByProductId(productFound).Product);
-        //    Assert.False(productService.GetAllProducts().Select(p => p.Id).Max() == productIdFound);
-        //    Assert.NotEqual(productIdFound, cartLineProductIdFoundInCart);
-        //}
+                var cartController = new CartController(cart, productService);
+
+                var orderController = new OrderController(cart, orderService, orderlocalizer);
+
+                // Act Product creation 
+
+                productController.Create(productViewModelToDelete);
+                int productIdFoundToDelete = productService.GetAllProducts().Select(p => p.Id).Max();
+                var productFoundToDelete = productService.GetProductById(productIdFoundToDelete);
+
+
+                productController.Create(productViewModelToKeep);
+                int productIdFoundToKeep = productService.GetAllProducts().Select(p => p.Id).Max();
+                var productFoundToKeep = productService.GetProductById(productIdFoundToKeep);
+
+
+                cartController.AddToCart(productIdFoundToDelete);
+                cartController.AddToCart(productIdFoundToKeep);
+
+                int cartLineProductIdFoundInCartToDelete = cart.GetCartLineByProductId(productFoundToDelete).Product.Id;
+                int cartLineProductIdFoundInCartToKeep = cart.GetCartLineByProductId(productFoundToKeep).Product.Id;
+
+
+                // Assert
+                Assert.True(productFoundToDelete.Name == productViewModelToDelete.Name);
+                Assert.True(productFoundToKeep.Name == productViewModelToKeep.Name);
+
+                Assert.Equal(productIdFoundToDelete, cartLineProductIdFoundInCartToDelete);
+                Assert.Equal(productIdFoundToKeep, cartLineProductIdFoundInCartToKeep);
+
+
+                // Act Product deletion
+
+                var cartLineList = new List<CartLine>();
+
+                var cartLineToDelete = cart.GetCartLineByProductId(productFoundToDelete);
+                var cartLineToKeep = cart.GetCartLineByProductId(productFoundToKeep);
+
+                cartLineList.Add(cartLineToDelete);
+                cartLineList.Add(cartLineToKeep);
+
+                productService.DeleteProduct(productIdFoundToDelete);
+
+                OrderViewModel orderViewModel = new OrderViewModel
+                {
+                    Name = "testName",
+                    Address = "testAdress",
+                    Zip = "123456",
+                    City = "testCity",
+                    Country = "TestCountry",
+                    Lines = cartLineList
+                };
+                //productController.DeleteProduct(productIdFoundToDelete);
+
+                //Assert
+                Assert.Null(cart.GetCartLineByProductId(productFoundToDelete));
+
+                // Act Order
+                orderController.Index(orderViewModel);
+
+                //Assert
+                Assert.True(productFoundToKeep.Quantity == 9);
+            }
     }
- }
+}
+ 
 
 
 

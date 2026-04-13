@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace P3.Resources.Models
 {
-    public static class Order
+    public class Order
     {
         private static ResourceManager resourceManager = new ResourceManager("P3.Resources.Models.Order", Assembly.GetExecutingAssembly());
         private static CultureInfo resourceCulture;
